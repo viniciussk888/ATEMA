@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './global.css';
 
 //PAGES
-import AtlasForm from './pages/AtlasForm'
+import Atlas from './pages/Atlas'
 import Home from './pages/Home'
 import Login from './pages/Login'
 //REDUX
@@ -20,7 +20,7 @@ function App() {
         <Router>
           <Route path='/login' component={Login} />
           <Route exact path='/' component={Home} />
-          <Route path='/atlas' component={AtlasForm} />
+          <Route path='/atlas' component={Atlas} />
         </Router>
       </PersistGate>
     </Provider>

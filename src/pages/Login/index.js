@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -86,7 +84,7 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Entrar no Sistema
           </Typography>
             <form className={classes.form} noValidate>
               <TextField
@@ -95,7 +93,7 @@ export default function Login() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Usuário"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -107,15 +105,11 @@ export default function Login() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Senha"
                 type="password"
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => setSenha(e.target.value)}
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
               />
               <Button
                 onClick={HandleLogin}
@@ -125,19 +119,19 @@ export default function Login() {
                 color="primary"
                 className={classes.submit}
               >
-                Sign In
+                Entrar
             </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    Forgot password?
+                    Esqueceu sua senha?
                 </Link>
                 </Grid>
-                <Grid item>
+                {/*<Grid item>
                   <Link href="#" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
-                </Grid>
+               </Grid>*/}
               </Grid>
               <Box mt={5}>
                 <Copyright />
