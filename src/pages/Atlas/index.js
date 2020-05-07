@@ -1,7 +1,8 @@
 import React from 'react';
 import Dashboard from '../../components/Dashboard';
+import { Link } from 'react-router-dom';
 
-import Link from '@material-ui/core/Link';
+//import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Search from '@material-ui/icons/Search'
+//import Search from '@material-ui/icons/Search'
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
@@ -35,8 +36,11 @@ function preventDefault(event) {
 }
 
 const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: 3,
+  paperPrimary: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'row',
   },
   paper: {
     padding: theme.spacing(2),
@@ -52,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    width: 600,
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -64,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  gridButton: {
+  }
 }));
 
 
@@ -73,8 +79,9 @@ export default function AtlasForm() {
     <>
       <Dashboard>
         <Grid item xs={12} className={classes.grid}>
-          <Paper className={classes.paper}>
-            <Grid item xs={12} sm={6}>
+          <Paper className={classes.paperPrimary}>
+
+            <Grid item xs={12} sm={10}>
               <Paper component="form" className={classes.root}>
                 <InputBase
                   className={classes.input}
@@ -86,17 +93,17 @@ export default function AtlasForm() {
                 </IconButton>
               </Paper>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Link to='/novoatlas'>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 endIcon={<Icon>add</Icon>}
               > NOVO </Button>
-            </Grid>
+            </Link>
+
           </Paper>
         </Grid>
-
 
         <Grid item xs={12} className={classes.grid}>
           <Paper className={classes.paper}>
@@ -123,11 +130,6 @@ export default function AtlasForm() {
                   ))}
                 </TableBody>
               </Table>
-              <div className={classes.seeMore}>
-                <Link color="primary" href="#" onClick={preventDefault}>
-                  See more orders
-        </Link>
-              </div>
             </React.Fragment>
           </Paper>
         </Grid>
