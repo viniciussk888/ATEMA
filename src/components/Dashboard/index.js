@@ -130,8 +130,8 @@ export default function Dashboard(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              ATEMA MA
-          </Typography>
+              Bem Vindo {useSelector(state => state.usuarioEmail) || "Visitante"}
+            </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />

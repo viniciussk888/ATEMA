@@ -6,11 +6,14 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import Clear from '@material-ui/icons/Clear'
+import ArrowBackIos from '@material-ui/icons/ArrowBackIos'
+import IconButton from '@material-ui/core/IconButton'
 
 import apiMeso from "../../services/apiMeso";
 import apiMun from "../../services/apiMun";
@@ -23,13 +26,16 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  button: {
+    marginRight: 50
+  },
   grid: {
     marginBottom: 5,
     padding: 3
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200,
+    minWidth: 320,
   },
 }));
 
@@ -38,9 +44,10 @@ export default function NewAtlas() {
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
   // const [mesorregiao, setMesorregiao] = useState("");
-  const [codMeso, setCodMeso] = useState("2101");
-  const [municipio, setMunicipio] = useState("2101");
+  const [codMeso, setCodMeso] = useState("");
+  const [municipio, setMunicipio] = useState("");
   const [microrregiao, setMicrorregiao] = useState("");
+  const [elementogeografico, setElementogeografico] = useState("Cidade");
 
 
   useEffect(() => {
@@ -83,14 +90,16 @@ export default function NewAtlas() {
         <Paper className={classes.paper}>
           <React.Fragment>
             <Typography variant="h6" gutterBottom>
-              INFORME OS DADOS
-      </Typography>
-            <Grid container>
-              <Grid item xs={12} sm={9} className={{ flexDirection: 'colunm' }}>
-
+              <IconButton to="/atlas" aria-label="back">
+                <ArrowBackIos /> Voltar
+              </IconButton> <center>INFORME OS DADOS</center>
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" className={classes.formControl}>
                   <InputLabel htmlFor="filled-age-native-simple">Mesorregião</InputLabel>
                   <Select
+                    required
                     native
                     onChange={handleChangeMeso}
                   >
@@ -100,10 +109,12 @@ export default function NewAtlas() {
                     ))}
                   </Select>
                 </FormControl>
-
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" className={classes.formControl}>
                   <InputLabel htmlFor="filled-age-native-simple">Microrregião</InputLabel>
                   <Select
+                    required
                     native
                     onChange={handleChangeMicro}
                   >
@@ -113,10 +124,12 @@ export default function NewAtlas() {
                     ))}
                   </Select>
                 </FormControl>
-
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" className={classes.formControl}>
                   <InputLabel htmlFor="filled-age-native-simple">Município</InputLabel>
                   <Select
+                    required
                     native
                     onChange={handleChangeMun}
                   >
@@ -126,78 +139,168 @@ export default function NewAtlas() {
                     ))}
                   </Select>
                 </FormControl>
-
               </Grid>
 
 
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  id="elementogeografico"
+                  name="elementogeografico"
+                  label="Elemento geográfico"
+                  defaultValue={elementogeografico}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  required
+                  id="toponimo"
+                  name="toponimo"
+                  label="Topônimo"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  id="variante"
+                  name="variante"
+                  label="Variante"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <TextField
+                  required
+                  id="tipo"
+                  name="tipo"
+                  label="Tipo"
+                  defaultValue="Humano"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <TextField id="area"
+                  name="area"
+                  label="Área"
+                  fullWidth
+                  variant="outlined"
+                  defaultValue="Urbana"
+                />
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <TextField id="linguaorigem"
+                  name="linguaorigem"
+                  label="Língua de Origem"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  id="etimologia"
+                  name="etimologia"
+                  label="Etimologia"
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   required
-                  id="lastName"
-                  name="lastName"
-                  label="Last name"
-                  value={municipio}
+                  id="taxionomia"
+                  name="taxionomia"
+                  label="Taxionomia"
+                  variant="outlined"
                   fullWidth
-                  autoComplete="lname"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="address1"
-                  name="address1"
-                  label="Address line 1"
+                  id="Estrutura"
+                  name="Estrutura"
+                  label="Estrutura morfológica"
+                  variant="outlined"
                   fullWidth
-                  autoComplete="billing address-line1"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={3}>
                 <TextField
-                  id="address2"
-                  name="address2"
-                  label="Address line 2"
+                  id="referencias"
+                  name="referencias"
+                  label="Referências"
+                  variant="outlined"
                   fullWidth
-                  autoComplete="billing address-line2"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="city"
-                  name="city"
-                  label="City"
+                  id="fonte"
+                  name="fonte"
+                  label="Fonte (dados do mapa)"
+                  variant="outlined"
                   fullWidth
-                  autoComplete="billing address-level2"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField id="state" name="state" label="State/Province/Region" fullWidth />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={2}>
                 <TextField
-                  required
-                  id="zip"
-                  name="zip"
-                  label="Zip / Postal code"
-                  fullWidth
-                  autoComplete="billing postal-code"
+                  id="date"
+                  label="Data da coleta"
+                  type="date"
+                  variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={5}>
                 <TextField
-                  required
-                  id="country"
-                  name="country"
-                  label="Country"
+                  id="Responsável"
+                  name="Responsável"
+                  label="Responsável pela coleta"
+                  variant="outlined"
                   fullWidth
-                  autoComplete="billing country"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-                  label="Use this address for payment details"
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  id="revisor"
+                  name="revisor"
+                  label="Revisor"
+                  variant="outlined"
+                  fullWidth
                 />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  id="obs"
+                  name="obs"
+                  label="Observações"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Button
+                  xs={12} sm={12}
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  startIcon={<Clear />}
+                >
+                  Limpar
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  endIcon={<Icon>save</Icon>}
+                >
+                  Salvar
+                </Button>
               </Grid>
             </Grid>
           </React.Fragment>
