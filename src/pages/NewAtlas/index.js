@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Dashboard from '../../components/Dashboard';
 
 import Grid from '@material-ui/core/Grid';
@@ -18,6 +19,8 @@ import IconButton from '@material-ui/core/IconButton'
 import apiMeso from "../../services/apiMeso";
 import apiMun from "../../services/apiMun";
 import mesorregioes from '../../utils/mesorregioes.json'
+import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,12 +46,28 @@ export default function NewAtlas() {
   //states buscas API
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
-  // const [mesorregiao, setMesorregiao] = useState("");
-  const [codMeso, setCodMeso] = useState("");
+  // select
+  const [codMeso, setCodMeso] = useState("");//MESOREGIAO COD+NOME
   const [municipio, setMunicipio] = useState("");
   const [microrregiao, setMicrorregiao] = useState("");
+  // end select
   const [elementogeografico, setElementogeografico] = useState("Cidade");
+  const [toponimo, setToponimo] = useState("");
+  const [variante, setVariante] = useState("");
+  const [tipo, setTipo] = useState("Humano");
+  const [area, setArea] = useState("Urbana");
+  const [linguaOrigem, setLinguaOrigem] = useState("");
+  const [etimologia, setEtimologia] = useState("");
+  const [taxionomia, setTaxionomia] = useState("");
+  const [estruturaMorfologica, setEstruturaMorfologica] = useState("");
+  const [referencias, setReferencias] = useState("");
+  const [fonte, setFonte] = useState("");
+  const [dataColeta, setDataColeta] = useState();
+  const [responsavel, setResponsavel] = useState("");
+  const [revisor, setRevisor] = useState("");
+  const [observacoes, setObservacoes] = useState("");
 
+  const [modalShow, setModalShow] = React.useState(false);
 
   useEffect(() => {
     let aux = codMeso.split('-');
@@ -83,6 +102,117 @@ export default function NewAtlas() {
     setMunicipio(event.target.value);
   };
 
+  function submitData() {
+    alert("mesorregiao-" + codMeso + "\n" +
+      "microrregiao-" + microrregiao + "\n" +
+      "municipio-" + municipio + "\n" +
+      "toponimo-" + toponimo + "\n" +
+      "variante-" + variante + "\n" +
+      "tipo-" + tipo + "\n" +
+      "area-" + area + "\n" +
+      "linguaOrigem-" + linguaOrigem + "\n" +
+      "etimologia-" + etimologia + "\n" +
+      "taxionomia-" + taxionomia + "\n" +
+      "estruturaMorfologica-" + estruturaMorfologica + "\n" +
+      "referencias-" + referencias + "\n" +
+      "fonte-" + fonte + "\n" +
+      "dataColeta-" + dataColeta + "\n" +
+      "responsavel-" + responsavel + "\n" +
+      "revisor-" + revisor + "\n" +
+      "observacoes-" + observacoes + "\n")
+  }
+
+  function MyVerticallyCenteredModal(props) {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Confirma o envio?
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table responsive>
+            <thead>
+              <tr>
+                <th>Mesorregião</th>
+                <th>Microrregião</th>
+                <th>Município</th>
+                <th>Elemento Geográfico</th>
+                <th>Topônimo</th>
+                <th>Variante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{codMeso}</td>
+                <td>{microrregiao}</td>
+                <td>{municipio}</td>
+                <td>{elementogeografico}</td>
+                <td>{toponimo}</td>
+                <td>{variante}</td>
+              </tr>
+            </tbody>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Área</th>
+                <th>Língua de Origem</th>
+                <th>Taxionomia</th>
+                <th>Estrutura Morfológica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{tipo}</td>
+                <td>{area}</td>
+                <td>{linguaOrigem}</td>
+                <td>{taxionomia}</td>
+                <td>{estruturaMorfologica}</td>
+              </tr>
+            </tbody>
+            <thead>
+              <tr>
+                <th>Referências</th>
+                <th>Fonte (dados do mapa)</th>
+                <th>Data da coleta</th>
+                <th>Responsavel pela coleta</th>
+                <th>Revisor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{referencias}</td>
+                <td>{fonte}</td>
+                <td>{dataColeta}</td>
+                <td>{responsavel}</td>
+                <td>{revisor}</td>
+              </tr>
+            </tbody>
+          </Table>
+          <div className={classes.div}>
+            <strong>Etimologia</strong>
+            <p>{etimologia}</p>
+            <strong>Observações</strong>
+            <p>{observacoes}</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            endIcon={<Icon>send</Icon>}
+          >Enviar </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   const classes = useStyles();
   return (
     <Dashboard>
@@ -90,9 +220,12 @@ export default function NewAtlas() {
         <Paper className={classes.paper}>
           <React.Fragment>
             <Typography variant="h6" gutterBottom>
-              <IconButton to="/atlas" aria-label="back">
-                <ArrowBackIos /> Voltar
-              </IconButton> <center>INFORME OS DADOS</center>
+              <Link to='/atlas'>
+                <IconButton to="/atlas" aria-label="back">
+                  <ArrowBackIos /> Voltar
+              </IconButton>
+              </Link>
+              <center>INFORME OS DADOS</center>
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>
@@ -150,6 +283,7 @@ export default function NewAtlas() {
                   defaultValue={elementogeografico}
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setElementogeografico(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -160,6 +294,7 @@ export default function NewAtlas() {
                   label="Topônimo"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setToponimo(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -169,6 +304,7 @@ export default function NewAtlas() {
                   label="Variante"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setVariante(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -177,9 +313,10 @@ export default function NewAtlas() {
                   id="tipo"
                   name="tipo"
                   label="Tipo"
-                  defaultValue="Humano"
+                  defaultValue={tipo}
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setTipo(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -188,7 +325,8 @@ export default function NewAtlas() {
                   label="Área"
                   fullWidth
                   variant="outlined"
-                  defaultValue="Urbana"
+                  defaultValue={area}
+                  onChange={(e) => setArea(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -197,6 +335,7 @@ export default function NewAtlas() {
                   label="Língua de Origem"
                   fullWidth
                   variant="outlined"
+                  onChange={(e) => setLinguaOrigem(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -206,6 +345,7 @@ export default function NewAtlas() {
                   label="Etimologia"
                   fullWidth
                   variant="outlined"
+                  onChange={(e) => setEtimologia(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -216,6 +356,7 @@ export default function NewAtlas() {
                   label="Taxionomia"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setTaxionomia(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -225,6 +366,7 @@ export default function NewAtlas() {
                   label="Estrutura morfológica"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setEstruturaMorfologica(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -234,6 +376,7 @@ export default function NewAtlas() {
                   label="Referências"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setReferencias(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -243,6 +386,7 @@ export default function NewAtlas() {
                   label="Fonte (dados do mapa)"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setFonte(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -254,6 +398,7 @@ export default function NewAtlas() {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  onChange={(e) => setDataColeta(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -263,6 +408,7 @@ export default function NewAtlas() {
                   label="Responsável pela coleta"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setResponsavel(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -272,6 +418,7 @@ export default function NewAtlas() {
                   label="Revisor"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setRevisor(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -281,6 +428,7 @@ export default function NewAtlas() {
                   label="Observações"
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setObservacoes(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -290,6 +438,7 @@ export default function NewAtlas() {
                   color="secondary"
                   className={classes.button}
                   startIcon={<Clear />}
+                  onClick={() => { window.location.reload() }}
                 >
                   Limpar
                 </Button>
@@ -298,9 +447,14 @@ export default function NewAtlas() {
                   color="primary"
                   className={classes.button}
                   endIcon={<Icon>save</Icon>}
+                  onClick={() => setModalShow(true)}
                 >
                   Salvar
                 </Button>
+                <MyVerticallyCenteredModal
+                  show={modalShow}
+                  onHide={() => setModalShow(false)}
+                />
               </Grid>
             </Grid>
           </React.Fragment>
