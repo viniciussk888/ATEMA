@@ -14,32 +14,18 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
 import apiMeso from "../../services/apiMeso";
 import apiMun from "../../services/apiMun";
 import mesorregioes from '../../utils/mesorregioes.json'
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import TableContainer from '@material-ui/core/TableContainer';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Create from '@material-ui/icons/Create';
+import Visibility from '@material-ui/icons/Visibility';
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
 
 const useStyles = makeStyles((theme) => ({
   paperPrimary: {
@@ -77,11 +63,25 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 250,
+  },
+  table: {
+    minWidth: 650,
   }
 }));
 
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
 
-export default function AtlasForm() {
+const rows = [
+  createData("Norte Maranhense", "Aglomeração urbana de São Luís", "Paço do Lumiar", "Paço do Lumiar", "Hebraico + Português"),
+  createData("TESTE", "TESTE", "TESTE", "TESTE", "TESTE"),
+];
+
+
+
+
+export default function Atlas() {
   const classes = useStyles();
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
@@ -186,7 +186,7 @@ export default function AtlasForm() {
                   > APLICAR FILTRO</Button>
                 </Link>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <Link to='/novoatlas'>
                   <Button
                     variant="contained"
@@ -203,28 +203,47 @@ export default function AtlasForm() {
         <Grid item xs={12} className={classes.grid}>
           <Paper className={classes.paper}>
             <React.Fragment>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Ship To</TableCell>
-                    <TableCell>Payment Method</TableCell>
-                    <TableCell align="right">Sale Amount</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.date}</TableCell>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.shipTo}</TableCell>
-                      <TableCell>{row.paymentMethod}</TableCell>
-                      <TableCell align="right">{row.amount}</TableCell>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Mesorregião</TableCell>
+                      <TableCell align="center">Microrregião</TableCell>
+                      <TableCell align="center">Município</TableCell>
+                      <TableCell align="center">Topônimo</TableCell>
+                      <TableCell align="center">Língua de Origem</TableCell>
+                      <TableCell align="center">Ações</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row) => (
+                      <TableRow key={row.name}>
+                        <TableCell component="th" scope="row">{row.name}</TableCell>
+                        <TableCell align="center">{row.calories}</TableCell>
+                        <TableCell align="center">{row.fat}</TableCell>
+                        <TableCell align="center">{row.carbs}</TableCell>
+                        <TableCell align="center">{row.protein}</TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            aria-label="Ver Mais">
+                            <Visibility />
+                          </IconButton>
+                          <IconButton
+                            color="primary"
+                            aria-label="Editar">
+                            <Create />
+                          </IconButton>
+                          <IconButton
+                            color="secondary"
+                            aria-label="Deletar">
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </React.Fragment>
           </Paper>
         </Grid>

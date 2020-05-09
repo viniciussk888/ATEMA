@@ -46,7 +46,7 @@ export const mainListItems = (
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="POSTS" />
     </ListItem>
   </div>
 );

@@ -4,7 +4,6 @@ import './global.css';
 
 //PAGES
 import Atlas from './pages/Atlas'
-import Home from './pages/Home'
 import Login from './pages/Login'
 import NewAtlas from './pages/NewAtlas'
 import Blog from './pages/Blog'
