@@ -7,6 +7,7 @@ import Atlas from './pages/Atlas'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import NewAtlas from './pages/NewAtlas'
+import Blog from './pages/Blog'
 //REDUX
 import { store, persistor } from './store/';
 import { Provider } from 'react-redux';
@@ -20,7 +21,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <Router>
           <Route path='/login' component={Login} />
-          <Route exact path='/' component={Home} />
+          <Route exact path='/' component={Blog} />
           <Route path='/atlas' component={Atlas} />
           <Route path='/novoatlas' component={NewAtlas} />
         </Router>

@@ -238,7 +238,7 @@ export default function NewAtlas() {
                   >
                     <option selected disabled value="Não selecionada">Selecione...</option>
                     {mesorregioes.map(item => (
-                      <option value={item.codigo + '-' + item.nome}>{item.codigo + '-' + item.nome}</option>
+                      <option value={item.codigo + '-' + item.nome}>{item.nome}</option>
                     ))}
                   </Select>
                 </FormControl>
@@ -253,7 +253,7 @@ export default function NewAtlas() {
                   >
                     <option selected disabled value="Não selecionada">Selecione...</option>
                     {microrregioes.map(item => (
-                      <option value={item.id + '-' + item.nome}>{item.id + '-' + item.nome}</option>
+                      <option value={item.id + '-' + item.nome}>{item.nome}</option>
                     ))}
                   </Select>
                 </FormControl>

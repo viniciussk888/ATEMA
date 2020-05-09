@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dashboard from '../../components/Dashboard';
 import { Link } from 'react-router-dom';
 
@@ -11,12 +11,18 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-//import Search from '@material-ui/icons/Search'
+import Typography from '@material-ui/core/Typography';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
+import apiMeso from "../../services/apiMeso";
+import apiMun from "../../services/apiMun";
+import mesorregioes from '../../utils/mesorregioes.json'
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -40,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   paper: {
     padding: theme.spacing(2),
@@ -68,40 +74,129 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-  gridButton: {
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 250,
   }
 }));
 
 
 export default function AtlasForm() {
   const classes = useStyles();
+  const [microrregioes, setMicorregioes] = useState([]);
+  const [municipios, setMunicipios] = useState([]);
+  const [codMeso, setCodMeso] = useState("");//MESOREGIAO COD+NOME
+  const [municipio, setMunicipio] = useState("");
+  const [microrregiao, setMicrorregiao] = useState("");
+
+  useEffect(() => {
+    let aux = codMeso.split('-');
+    let id = aux[0];
+
+    async function fetchData() {
+      const response = await apiMeso.get(`${id}/microrregioes`);
+      setMicorregioes(response.data);
+    }
+    fetchData();
+  }, [codMeso]);
+
+  useEffect(() => {
+    let aux = microrregiao.split('-');
+    let id = aux[0];
+
+    async function fetchData() {
+      const response = await apiMun.get(`${id}/municipios`);
+      setMunicipios(response.data);
+    }
+    fetchData();
+
+  }, [microrregiao])
+
+  const handleChangeMeso = (event) => {
+    setCodMeso(event.target.value);
+  };
+  const handleChangeMicro = (event) => {
+    setMicrorregiao(event.target.value);
+  };
+  const handleChangeMun = (event) => {
+    setMunicipio(event.target.value);
+  };
+
   return (
     <>
       <Dashboard>
         <Grid item xs={12} className={classes.grid}>
           <Paper className={classes.paperPrimary}>
-
-            <Grid item xs={12} sm={10}>
-              <Paper component="form" className={classes.root}>
-                <InputBase
-                  className={classes.input}
-                  placeholder="Buscar"
-                  inputProps={{ 'aria-label': 'Buscar' }}
-                />
-                <IconButton type="submit" className={classes.iconButton} aria-label="search">
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
+            <Typography variant="h6" gutterBottom>
+              Filtros
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Mesorregião</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={handleChangeMeso}
+                  >
+                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    {mesorregioes.map(item => (
+                      <option value={item.codigo + '-' + item.nome}>{item.nome}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Microrregião</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={handleChangeMicro}
+                  >
+                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    {microrregioes.map(item => (
+                      <option value={item.id + '-' + item.nome}>{item.nome}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Município</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={handleChangeMun}
+                  >
+                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    {municipios.map(item => (
+                      <option value={item.nome}>{item.nome}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Link to='/novoatlas'>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    endIcon={<Icon>search</Icon>}
+                  > APLICAR FILTRO</Button>
+                </Link>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Link to='/novoatlas'>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    endIcon={<Icon>add</Icon>}
+                  > NOVO </Button>
+                </Link>
+              </Grid>
             </Grid>
-            <Link to='/novoatlas'>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                endIcon={<Icon>add</Icon>}
-              > NOVO </Button>
-            </Link>
-
           </Paper>
         </Grid>
 
