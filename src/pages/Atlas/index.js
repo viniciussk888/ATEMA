@@ -177,17 +177,15 @@ export default function Atlas() {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <Link to='/novoatlas'>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    endIcon={<Icon>search</Icon>}
-                  > APLICAR FILTRO</Button>
-                </Link>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  endIcon={<Icon>search</Icon>}
+                > APLICAR FILTRO</Button>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <Link to='/novoatlas'>
+                <Link to='/atlas/novoatlas'>
                   <Button
                     variant="contained"
                     color="primary"

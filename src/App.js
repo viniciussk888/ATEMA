@@ -19,10 +19,10 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router>
-          <Route path='/login' component={Login} />
+          <Route exact path='/login' component={Login} />
           <Route exact path='/' component={Blog} />
-          <Route path='/atlas' component={Atlas} />
-          <Route path='/novoatlas' component={NewAtlas} />
+          <Route exact path='/atlas' component={Atlas} />
+          <Route exact path='/atlas/novoatlas' component={NewAtlas} />
         </Router>
       </PersistGate>
     </Provider>
