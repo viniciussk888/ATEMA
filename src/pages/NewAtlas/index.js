@@ -15,12 +15,14 @@ import Icon from '@material-ui/core/Icon';
 import Clear from '@material-ui/icons/Clear'
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos'
 import IconButton from '@material-ui/core/IconButton'
-
-import apiMeso from "../../services/apiMeso";
-import apiMun from "../../services/apiMun";
-import mesorregioes from '../../utils/mesorregioes.json'
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table'
+//apis
+import apiMeso from "../../services/apiMeso";
+import apiMun from "../../services/apiMun";
+import apiAtema from "../../services/apiAtema";
+import mesorregioes from '../../utils/mesorregioes.json'
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -102,24 +104,32 @@ export default function NewAtlas() {
     setMunicipio(event.target.value);
   };
 
-  function submitData() {
-    alert("mesorregiao-" + codMeso + "\n" +
-      "microrregiao-" + microrregiao + "\n" +
-      "municipio-" + municipio + "\n" +
-      "toponimo-" + toponimo + "\n" +
-      "variante-" + variante + "\n" +
-      "tipo-" + tipo + "\n" +
-      "area-" + area + "\n" +
-      "linguaOrigem-" + linguaOrigem + "\n" +
-      "etimologia-" + etimologia + "\n" +
-      "taxionomia-" + taxionomia + "\n" +
-      "estruturaMorfologica-" + estruturaMorfologica + "\n" +
-      "referencias-" + referencias + "\n" +
-      "fonte-" + fonte + "\n" +
-      "dataColeta-" + dataColeta + "\n" +
-      "responsavel-" + responsavel + "\n" +
-      "revisor-" + revisor + "\n" +
-      "observacoes-" + observacoes + "\n")
+  async function submitData(props) {
+    if (!codMeso || !microrregiao || !municipio || !toponimo) {
+      alert("Dados de Região e Toponimo são nescessarios!")
+    }
+    props.onHide()
+    const response = await apiAtema.post('atema', {
+      mesorregiao: codMeso,
+      microrregiao: microrregiao,
+      municipio: municipio,
+      toponimo: toponimo,
+      variante: variante,
+      tipo: tipo,
+      area: area,
+      linguaOrigem: linguaOrigem,
+      etimologia: etimologia,
+      taxionomia: taxionomia,
+      estruturaMorfologica: estruturaMorfologica,
+      referencias: referencias,
+      fonte: fonte,
+      dataColeta: dataColeta,
+      responsavel: responsavel,
+      revisor: revisor,
+      observacoes: observacoes
+    })
+    console.log(response)
+
   }
 
   function MyVerticallyCenteredModal(props) {
@@ -202,7 +212,7 @@ export default function NewAtlas() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={props.onHide}
+          <Button onClick={() => (submitData(props))}
             variant="contained"
             color="primary"
             className={classes.button}
