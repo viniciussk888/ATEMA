@@ -22,6 +22,7 @@ import apiMeso from "../../services/apiMeso";
 import apiMun from "../../services/apiMun";
 import apiAtema from "../../services/apiAtema";
 import mesorregioes from '../../utils/mesorregioes.json'
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +71,9 @@ export default function NewAtlas() {
   const [observacoes, setObservacoes] = useState("");
 
   const [modalShow, setModalShow] = React.useState(false);
+  const config = {
+    headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
+  };
 
   useEffect(() => {
     let aux = codMeso.split('-');
@@ -107,29 +111,36 @@ export default function NewAtlas() {
   async function submitData(props) {
     if (!codMeso || !microrregiao || !municipio || !toponimo) {
       alert("Dados de Região e Toponimo são nescessarios!")
+      props.onHide()
+      return
     }
     props.onHide()
-    const response = await apiAtema.post('atema', {
-      mesorregiao: codMeso,
-      microrregiao: microrregiao,
-      municipio: municipio,
-      toponimo: toponimo,
-      variante: variante,
-      tipo: tipo,
-      area: area,
-      linguaOrigem: linguaOrigem,
-      etimologia: etimologia,
-      taxionomia: taxionomia,
-      estruturaMorfologica: estruturaMorfologica,
-      referencias: referencias,
-      fonte: fonte,
-      dataColeta: dataColeta,
-      responsavel: responsavel,
-      revisor: revisor,
-      observacoes: observacoes
-    })
-    console.log(response)
-
+    try {
+      const response = await apiAtema.post('atema', {
+        mesorregiao: codMeso,
+        microrregiao: microrregiao,
+        municipio: municipio,
+        toponimo: toponimo,
+        variante: variante,
+        tipo: tipo,
+        area: area,
+        linguaOrigem: linguaOrigem,
+        etimologia: etimologia,
+        taxionomia: taxionomia,
+        estruturaMorfologica: estruturaMorfologica,
+        referencias: referencias,
+        fonte: fonte,
+        dataColeta: dataColeta,
+        responsavel: responsavel,
+        revisor: revisor,
+        observacoes: observacoes
+      }, config)
+      if (response.data) {
+        alert("Dados Enviados Com Sucesso!!")
+      }
+    } catch (error) {
+      alert(error)
+    }
   }
 
   function MyVerticallyCenteredModal(props) {

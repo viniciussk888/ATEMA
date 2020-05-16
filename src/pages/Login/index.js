@@ -13,6 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
+import apiAtema from "../../services/apiAtema";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -58,18 +60,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  const classes = useStyles();
-
-  const [email, setEmail] = useState();
-  const [senha, setSenha] = useState();
-
   const dispatch = useDispatch();
 
-  function HandleLogin() {
+  async function startSession() {
     if (!email || !senha) {
       alert('prencha os dados')
+      return;
     }
-    dispatch({ type: 'LOG_IN', usuarioEmail: email });
+    try {
+      const response = await apiAtema.post('sessions', {
+        email: email,
+        password: senha
+      })
+      if (response.data.token) {
+        HandleLogin(response.data.token)
+      }
+    } catch (error) {
+      alert("Error: " + error)
+    }
+  }
+
+  const classes = useStyles();
+
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+
+  function HandleLogin(token) {
+    dispatch({ type: 'LOG_IN', usuarioEmail: email, token: token });
   }
 
   return (
@@ -112,7 +130,7 @@ export default function Login() {
                 onChange={(e) => setSenha(e.target.value)}
               />
               <Button
-                onClick={HandleLogin}
+                onClick={startSession}
                 type="submit"
                 fullWidth
                 variant="contained"
