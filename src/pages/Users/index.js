@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Dashboard from '../../components/Dashboard';
-import { Link } from 'react-router-dom';
 
 //import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,36 +14,17 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
-import apiMeso from "../../services/apiMeso";
-import apiMun from "../../services/apiMun";
-import mesorregioes from '../../utils/mesorregioes.json'
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Create from '@material-ui/icons/Create';
-import Visibility from '@material-ui/icons/Visibility';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
-const GreenCheckbox = withStyles({
-  root: {
-    color: green[400],
-    '&$checked': {
-      color: green[600],
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
+import { useSelector } from 'react-redux';
+import apiAtema from "../../services/apiAtema";
+
 
 const useStyles = makeStyles((theme) => ({
   paperPrimary: {
@@ -88,16 +68,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
 
-const rows = [
-  createData("Alberto Vinicius", "vinicius.cross07@gmail.com", "Delete-Update-Create"),
-];
+
 
 export default function Users() {
+  const [users, setUsers] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const config = {
+    headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
+  };
+
   const classes = useStyles();
+
   const [state, setState] = React.useState({
     insert: false,
     update: false,
@@ -106,9 +91,41 @@ export default function Users() {
     admin: false,
   });
 
+  useEffect(() => {
+    async function fetchData() {
+      const response = await apiAtema.get(`users`, config);
+      setUsers(response.data);
+    }
+    fetchData();
+  }, []);
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+  async function createUser() {
+    if (!username || !email || !password) {
+      alert("Preencha todos os campos!")
+      return
+    }
+    try {
+      const response = await apiAtema.post('users', {
+        username: username,
+        password: password,
+        email: email,
+        insert: state.insert,
+        update: state.update,
+        delete: state.delete,
+        blog: state.blog,
+        admin: state.admin,
+      }, config)
+      if (response.data) {
+        alert("Cadastro Efetuado!!")
+        window.location.reload()
+      }
+    } catch (error) {
+      alert("ocorreu um erro! \n" + error)
+    }
+  }
 
   return (
     <>
@@ -126,16 +143,18 @@ export default function Users() {
                   name="name"
                   label="Nome de Usuário"
                   variant="outlined"
+                  onChange={(e) => setUsername(e.target.value)}
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
                   required
-                  id="Senha"
-                  name="Senha"
+                  id="password"
+                  type="password"
                   label="Senha"
                   variant="outlined"
+                  onChange={(e) => setPassword(e.target.value)}
                   fullWidth
                 />
               </Grid>
@@ -145,6 +164,7 @@ export default function Users() {
                   id="email"
                   name="email"
                   label="Email"
+                  onChange={(e) => setEmail(e.target.value)}
                   variant="outlined"
                   fullWidth
                 />
@@ -188,6 +208,7 @@ export default function Users() {
                 color="primary"
                 className={classes.button}
                 endIcon={<Icon>save</Icon>}
+                onClick={createUser}
               >
                 Salvar
                 </Button>
@@ -204,16 +225,24 @@ export default function Users() {
                     <TableRow>
                       <TableCell>Nome</TableCell>
                       <TableCell align="center">Email</TableCell>
-                      <TableCell align="center">Permissões</TableCell>
+                      <TableCell align="center">Administrador</TableCell>
+                      <TableCell align="center">Criar</TableCell>
+                      <TableCell align="center">Atualizar</TableCell>
+                      <TableCell align="center">Deletar</TableCell>
+                      <TableCell align="center">Blog</TableCell>
                       <TableCell align="center">Ações</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">{row.name}</TableCell>
-                        <TableCell align="center">{row.calories}</TableCell>
-                        <TableCell align="center">{row.fat}</TableCell>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell component="th" scope="row">{user.username}</TableCell>
+                        <TableCell align="center">{user.email}</TableCell>
+                        <TableCell align="center"><strong>{user.admin === 1 ? "SIM" : "NÃO"}</strong></TableCell>
+                        <TableCell align="center">{user.insert === 1 ? "SIM" : "NÃO"}</TableCell>
+                        <TableCell align="center">{user.update === 1 ? "SIM" : "NÃO"}</TableCell>
+                        <TableCell align="center">{user.delete === 1 ? "SIM" : "NÃO"}</TableCell>
+                        <TableCell align="center">{user.blog === 1 ? "SIM" : "NÃO"}</TableCell>
                         <TableCell align="center">
                           <IconButton
                             color="primary"

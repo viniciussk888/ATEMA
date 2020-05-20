@@ -22,7 +22,7 @@ import apiMeso from "../../services/apiMeso";
 import apiMun from "../../services/apiMun";
 import apiAtema from "../../services/apiAtema";
 import mesorregioes from '../../utils/mesorregioes.json'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
