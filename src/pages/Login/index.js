@@ -152,7 +152,7 @@ export default function Login() {
                </Grid>*/}
               </Grid>
               <Box mt={5}>
-                <Copyright />
+                {/*<Copyright />*/}
               </Box>
             </form>
           </div>

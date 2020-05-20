@@ -75,7 +75,6 @@ function createData(name, calories, fat, carbs, protein) {
 
 const rows = [
   createData("Norte Maranhense", "Aglomeração urbana de São Luís", "Paço do Lumiar", "Paço do Lumiar", "Hebraico + Português"),
-  createData("TESTE", "TESTE", "TESTE", "TESTE", "TESTE"),
 ];
 
 
