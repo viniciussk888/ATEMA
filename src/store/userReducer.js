@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
-  usuarioEmail: '',
   token: '',
+  usuarioEmail: '',
   usuarioLogado: 0,
 };
 

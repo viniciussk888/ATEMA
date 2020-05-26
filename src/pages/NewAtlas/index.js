@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Dashboard from '../../components/Dashboard';
 
 import Grid from '@material-ui/core/Grid';
@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NewAtlas() {
+  const history = useHistory();
   //states buscas API
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
@@ -74,6 +75,15 @@ export default function NewAtlas() {
   const config = {
     headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
   };
+
+  useEffect(() => {
+    const insert = localStorage.getItem('insert');
+    const admin = localStorage.getItem('admin');
+    if (admin == 0 && insert == 0) {
+      alert('Sem permissão para a operação!')
+      history.push('/atlas')
+    }
+  }, [])
 
   useEffect(() => {
     let aux = codMeso.split('-');

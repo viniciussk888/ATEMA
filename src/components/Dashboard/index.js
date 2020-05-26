@@ -130,7 +130,7 @@ export default function Dashboard(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Bem Vindo {useSelector(state => state.usuarioEmail) || "Visitante"}
+              Bem Vindo {localStorage.getItem('username') || "Visitante"}
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

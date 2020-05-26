@@ -84,11 +84,11 @@ export default function Users() {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    insert: false,
-    update: false,
-    delete: false,
-    blog: false,
-    admin: false,
+    insert: 0,
+    update: 0,
+    delete: 0,
+    blog: 0,
+    admin: 0,
   });
 
   useEffect(() => {

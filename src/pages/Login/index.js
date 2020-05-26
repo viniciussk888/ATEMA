@@ -10,23 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import apiAtema from "../../services/apiAtema";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,23 +48,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+  const history = useHistory();
   const dispatch = useDispatch();
 
-  async function startSession() {
-    if (!email || !senha) {
-      alert('prencha os dados')
-      return;
-    }
+  async function handleLogin(e) {
+    e.preventDefault();
     try {
       const response = await apiAtema.post('sessions', {
         email: email,
         password: senha
       })
-      if (response.data.token) {
-        HandleLogin(response.data.token)
-      }
-    } catch (error) {
-      alert("Error: " + error)
+      dispatch({ type: 'LOG_IN', usuarioEmail: email, token: response.data[0].token });
+      console.log(response)
+      localStorage.setItem('username', response.data[1].username)
+      localStorage.setItem('admin', response.data[1].admin);
+      localStorage.setItem('insert', response.data[1].insert);
+      localStorage.setItem('update', response.data[1].update);
+      localStorage.setItem('delete', response.data[1].delete);
+      localStorage.setItem('blog', response.data[1].blog);
+      history.push('/')
+
+    } catch (err) {
+      alert("Falha no login, tente novamente. ", err)
     }
   }
 
@@ -86,13 +79,8 @@ export default function Login() {
   const [senha, setSenha] = useState("");
 
 
-  function HandleLogin(token) {
-    dispatch({ type: 'LOG_IN', usuarioEmail: email, token: token });
-  }
-
   return (
     <>
-      {useSelector(state => state.usuarioLogado) > 0 ? <Redirect to='/' /> : null}
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -104,7 +92,7 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Entrar no Sistema
           </Typography>
-            <form className={classes.form} noValidate>
+            <form onSubmit={handleLogin} className={classes.form} noValidate>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -130,7 +118,6 @@ export default function Login() {
                 onChange={(e) => setSenha(e.target.value)}
               />
               <Button
-                onClick={startSession}
                 type="submit"
                 fullWidth
                 variant="contained"
