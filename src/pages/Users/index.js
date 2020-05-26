@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Dashboard from '../../components/Dashboard';
 
-//import Link from '@material-ui/core/Link';
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,7 +17,7 @@ import Button from '@material-ui/core/Button';
 import TableContainer from '@material-ui/core/TableContainer';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Create from '@material-ui/icons/Create';
+//import Create from '@material-ui/icons/Create';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -68,10 +68,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-
-
 export default function Users() {
+  const history = useHistory();
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -91,6 +89,27 @@ export default function Users() {
     admin: 0,
   });
 
+  async function deleteUser(id, username) {
+    const r = window.confirm(`Confirma a EXCLUSÃO de ${username} ?`);
+    if (r == true) {
+      try {
+        await apiAtema.delete(`users/${id}`, config)
+        window.location.reload()
+      } catch (error) {
+        alert("Erro ao deletar usúario!! " + error)
+      }
+    } else {
+      return
+    }
+  }
+  useEffect(() => {
+    const admin = localStorage.getItem('admin');
+    if (admin == 0) {
+      alert('Operação permitida apenas para ADMINISTRADORES!')
+      history.push('/')
+    }
+  }, [])
+
   useEffect(() => {
     async function fetchData() {
       const response = await apiAtema.get(`users`, config);
@@ -102,6 +121,7 @@ export default function Users() {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
   async function createUser() {
     if (!username || !email || !password) {
       alert("Preencha todos os campos!")
@@ -114,7 +134,6 @@ export default function Users() {
         email: email,
         insert: state.insert,
         update: state.update,
-        delete: state.delete,
         blog: state.blog,
         admin: state.admin,
       }, config)
@@ -126,6 +145,7 @@ export default function Users() {
       alert("ocorreu um erro! \n" + error)
     }
   }
+
 
   return (
     <>
@@ -188,11 +208,7 @@ export default function Users() {
                       color="primary"
                     />
                   }
-                  label="Atualizar"
-                />
-                <FormControlLabel
-                  control={<Checkbox color="primary" checked={state.delete} onChange={handleChange} name="delete" />}
-                  label="Delete"
+                  label="Alterar|Deletar"
                 />
                 <FormControlLabel
                   control={<Checkbox color="primary" checked={state.blog} onChange={handleChange} name="blog" />}
@@ -227,8 +243,7 @@ export default function Users() {
                       <TableCell align="center">Email</TableCell>
                       <TableCell align="center">Administrador</TableCell>
                       <TableCell align="center">Criar</TableCell>
-                      <TableCell align="center">Atualizar</TableCell>
-                      <TableCell align="center">Deletar</TableCell>
+                      <TableCell align="center">Alterar|Deletar</TableCell>
                       <TableCell align="center">Blog</TableCell>
                       <TableCell align="center">Ações</TableCell>
                     </TableRow>
@@ -241,15 +256,10 @@ export default function Users() {
                         <TableCell align="center"><strong>{user.admin === 1 ? "SIM" : "NÃO"}</strong></TableCell>
                         <TableCell align="center">{user.insert === 1 ? "SIM" : "NÃO"}</TableCell>
                         <TableCell align="center">{user.update === 1 ? "SIM" : "NÃO"}</TableCell>
-                        <TableCell align="center">{user.delete === 1 ? "SIM" : "NÃO"}</TableCell>
                         <TableCell align="center">{user.blog === 1 ? "SIM" : "NÃO"}</TableCell>
                         <TableCell align="center">
                           <IconButton
-                            color="primary"
-                            aria-label="Editar">
-                            <Create />
-                          </IconButton>
-                          <IconButton
+                            onClick={() => (deleteUser(user.id, user.username))}
                             color="secondary"
                             aria-label="Deletar">
                             <DeleteIcon />

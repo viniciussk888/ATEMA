@@ -1,6 +1,11 @@
-.link {
-  text-decoration: none;
+a{
+  color: #40404d;;
+}
+a:hover{
+  text-decoration: none!important;
   font-weight: 500;
   transition: opacity 0.2s;
-  color: #40404d;
+}
+.post-entry a:hover{
+  text-decoration: underline!important;
 }

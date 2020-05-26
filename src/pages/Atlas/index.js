@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from '../../components/Dashboard';
 import { Link } from 'react-router-dom';
 
-//import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,6 +24,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Create from '@material-ui/icons/Create';
 import Visibility from '@material-ui/icons/Visibility';
+
+import apiAtema from "../../services/apiAtema";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +89,27 @@ export default function Atlas() {
   const [municipio, setMunicipio] = useState("");
   const [microrregiao, setMicrorregiao] = useState("");
 
+  async function filter() {
+    if (!codMeso) {
+      return alert("Selecione a Mesorregião!")
+    }
+    try {
+      let aux = codMeso.split('-');
+      let meso = aux[1];
+      let aux2 = microrregiao.split('-');
+      let micro = aux2[1];
+      alert(micro)
+      const response = await apiAtema.post('atemafilter', {
+        mesorregiao: meso,
+        microrregiao: micro,
+        municipio: municipio
+      })
+      console.log(response.data)
+    } catch (error) {
+      alert('Erro ao filtrar os dados!' + error)
+    }
+  }
+
   useEffect(() => {
     let aux = codMeso.split('-');
     let id = aux[0];
@@ -138,7 +160,7 @@ export default function Atlas() {
                     native
                     onChange={handleChangeMeso}
                   >
-                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    <option selected disabled>Selecione...</option>
                     {mesorregioes.map(item => (
                       <option value={item.codigo + '-' + item.nome}>{item.nome}</option>
                     ))}
@@ -153,7 +175,7 @@ export default function Atlas() {
                     native
                     onChange={handleChangeMicro}
                   >
-                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    <option selected disabled>Selecione...</option>
                     {microrregioes.map(item => (
                       <option value={item.id + '-' + item.nome}>{item.nome}</option>
                     ))}
@@ -168,7 +190,7 @@ export default function Atlas() {
                     native
                     onChange={handleChangeMun}
                   >
-                    <option selected disabled value="Não selecionada">Selecione...</option>
+                    <option selected disabled>Selecione...</option>
                     {municipios.map(item => (
                       <option value={item.nome}>{item.nome}</option>
                     ))}
@@ -177,6 +199,7 @@ export default function Atlas() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Button
+                  onClick={filter}
                   variant="contained"
                   color="primary"
                   className={classes.button}
