@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 250,
+    minWidth: '80%',
   },
   table: {
     minWidth: 650,
@@ -85,6 +85,7 @@ export default function Atlas() {
   const classes = useStyles();
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
+  const [dataFilter, setDataFilter] = useState([]);
   const [codMeso, setCodMeso] = useState("");//MESOREGIAO COD+NOME
   const [municipio, setMunicipio] = useState("");
   const [microrregiao, setMicrorregiao] = useState("");
@@ -98,13 +99,12 @@ export default function Atlas() {
       let meso = aux[1];
       let aux2 = microrregiao.split('-');
       let micro = aux2[1];
-      alert(micro)
-      const response = await apiAtema.post('atemafilter', {
+      const response = await apiAtema.post('filter', {
         mesorregiao: meso,
         microrregiao: micro,
         municipio: municipio
       })
-      console.log(response.data)
+      setDataFilter(response.data)
     } catch (error) {
       alert('Erro ao filtrar os dados!' + error)
     }
@@ -149,7 +149,7 @@ export default function Atlas() {
         <Grid item xs={12} className={classes.grid}>
           <Paper className={classes.paperPrimary}>
             <Typography variant="h6" gutterBottom>
-              Filtros
+              Filtros de busca
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={3}>
@@ -236,13 +236,13 @@ export default function Atlas() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">{row.name}</TableCell>
-                        <TableCell align="center">{row.calories}</TableCell>
-                        <TableCell align="center">{row.fat}</TableCell>
-                        <TableCell align="center">{row.carbs}</TableCell>
-                        <TableCell align="center">{row.protein}</TableCell>
+                    {dataFilter.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell component="th" scope="row">{row.mesorregiao}</TableCell>
+                        <TableCell align="center">{row.microrregiao}</TableCell>
+                        <TableCell align="center">{row.municipio}</TableCell>
+                        <TableCell align="center">{row.toponimo}</TableCell>
+                        <TableCell align="center">{row.linguaOrigem}</TableCell>
                         <TableCell align="center">
                           <IconButton
                             aria-label="Ver Mais">
