@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import ArrowBackIos from '@material-ui/icons/ArrowBackIos'
 
 import apiAtema from "../../services/apiAtema";
 
@@ -47,36 +47,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function RecoverPassword() {
   const history = useHistory();
-  const dispatch = useDispatch();
 
-  async function handleLogin(e) {
-    e.preventDefault();
-    try {
-      const response = await apiAtema.post('sessions', {
-        email: email,
-        password: senha
-      })
-      dispatch({ type: 'LOG_IN', usuarioEmail: email, token: response.data[0].token });
-      console.log(response)
-      localStorage.setItem('username', response.data[1].username)
-      localStorage.setItem('admin', response.data[1].admin);
-      localStorage.setItem('insert', response.data[1].insert);
-      localStorage.setItem('update', response.data[1].update);
-      localStorage.setItem('delete', response.data[1].delete);
-      localStorage.setItem('blog', response.data[1].blog);
-      history.push('/')
 
-    } catch (err) {
-      alert("Falha no login, tente novamente. ", err)
-    }
-  }
 
   const classes = useStyles();
 
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [codigo, setCodigo] = useState("");
+  const [valido, setValido] = useState(false);
 
 
   return (
@@ -85,37 +64,30 @@ export default function Login() {
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className="ml-3 mt-3">
+            <Link to="/login">
+              <ArrowBackIos />Voltar
+          </Link>
+          </div>
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Entrar no Sistema
+
+              Criar nova senha
           </Typography>
-            <form onSubmit={handleLogin} className={classes.form} noValidate>
+            <form className={classes.form} noValidate>
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
+                id="codigo"
+                label="Informe o código"
+                name="codigo"
                 autoFocus
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Senha"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(e) => setSenha(e.target.value)}
+                onChange={(e) => setCodigo(e.target.value)}
               />
               <Button
                 type="submit"
@@ -124,13 +96,12 @@ export default function Login() {
                 color="primary"
                 className={classes.submit}
               >
-                Entrar
+                Validar código
             </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="/forgotpassword" variant="body2">
-                    Esqueceu sua senha?
-                </Link>
+                  Sera enviado um e-mail com o código recuperação!<br />
+                    Caso não chegue, verifique a caixa de spam ou tente novamente!
                 </Grid>
                 {/*<Grid item>
                   <Link href="#" variant="body2">

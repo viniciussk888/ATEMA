@@ -146,14 +146,13 @@ export default function Users() {
     }
   }
 
-
   return (
     <>
       <Dashboard>
         <Grid item xs={12} className={classes.grid}>
           <Paper className={classes.paperPrimary}>
             <Typography variant="h6" gutterBottom>
-              Gerenciar Usuário
+              Adicionar Novo Usuário
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={4}>

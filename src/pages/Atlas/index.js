@@ -22,10 +22,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TableContainer from '@material-ui/core/TableContainer';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Create from '@material-ui/icons/Create';
 import Visibility from '@material-ui/icons/Visibility';
 
+import { useSelector } from 'react-redux';
 import apiAtema from "../../services/apiAtema";
+import ModalSee from '../../components/ModalSee'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,17 +71,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Norte Maranhense", "Aglomeração urbana de São Luís", "Paço do Lumiar", "Paço do Lumiar", "Hebraico + Português"),
-];
-
-
-
-
 export default function Atlas() {
   const classes = useStyles();
   const [microrregioes, setMicorregioes] = useState([]);
@@ -89,7 +79,16 @@ export default function Atlas() {
   const [codMeso, setCodMeso] = useState("");//MESOREGIAO COD+NOME
   const [municipio, setMunicipio] = useState("");
   const [microrregiao, setMicrorregiao] = useState("");
+  const [modalShowSee, setModalShowSee] = React.useState(false);
 
+  const config = {
+    headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
+  };
+
+  function SeeModal(id) {
+    localStorage.setItem('atemaUpdate', id);
+    setModalShowSee(true)
+  }
   async function filter() {
     if (!codMeso) {
       return alert("Selecione a Mesorregião!")
@@ -107,6 +106,33 @@ export default function Atlas() {
       setDataFilter(response.data)
     } catch (error) {
       alert('Erro ao filtrar os dados!' + error)
+    }
+  }
+  async function deleteData(id) {
+    const update = localStorage.getItem('update');
+    const admin = localStorage.getItem('admin');
+    if (admin == 0 && update == 0) {
+      alert('Sem permissão para a operação!')
+      return
+    }
+    const r = window.confirm(`Confirma a EXCLUSÃO?`);
+    if (r == true) {
+      try {
+        await apiAtema.delete(`atema/${id}`, config)
+        window.location.reload();
+      } catch (error) {
+        alert("Erro ao deletar!! " + error)
+      }
+    } else {
+      return
+    }
+  }
+  async function seeAll() {
+    try {
+      const response = await apiAtema.get('atema', config)
+      setDataFilter(response.data)
+    } catch (error) {
+      alert('Erro ao buscar dados!' + error)
     }
   }
 
@@ -204,7 +230,16 @@ export default function Atlas() {
                   color="primary"
                   className={classes.button}
                   endIcon={<Icon>search</Icon>}
-                > APLICAR FILTRO</Button>
+                > APLICAR</Button>
+              </Grid>
+              <Grid item xs={12} sm={2}>
+                <Button
+                  onClick={seeAll}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  endIcon={<Icon>visibility</Icon>}
+                > VER TODOS</Button>
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Link to='/atlas/novoatlas'>
@@ -245,15 +280,13 @@ export default function Atlas() {
                         <TableCell align="center">{row.linguaOrigem}</TableCell>
                         <TableCell align="center">
                           <IconButton
-                            aria-label="Ver Mais">
+                            aria-label="Ver Mais"
+                            onClick={() => SeeModal(row.id)}
+                          >
                             <Visibility />
                           </IconButton>
                           <IconButton
-                            color="primary"
-                            aria-label="Editar">
-                            <Create />
-                          </IconButton>
-                          <IconButton
+                            onClick={() => (deleteData(row.id))}
                             color="secondary"
                             aria-label="Deletar">
                             <DeleteIcon />
@@ -262,6 +295,10 @@ export default function Atlas() {
                       </TableRow>
                     ))}
                   </TableBody>
+                  <ModalSee
+                    show={modalShowSee}
+                    onHide={() => setModalShowSee(false)}
+                  />
                 </Table>
               </TableContainer>
             </React.Fragment>

@@ -112,6 +112,10 @@ export default function Dashboard(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  function firstName(name) {
+    let aux = name.split(' ')
+    return aux[0].toUpperCase()
+  }
 
   return (
     <>
@@ -130,16 +134,16 @@ export default function Dashboard(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Bem Vindo {localStorage.getItem('username') || "Visitante"}
+              Bem Vindo {firstName(localStorage.getItem('username')) || "Visitante"}
             </Typography>
-            <IconButton color="inherit">
+            {/*<IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+  </IconButton>
             <IconButton color="inherit">
               <Settings />
-            </IconButton>
+            </IconButton>*/}
             <IconButton
               color="inherit"
               onClick={() => dispatch({ type: 'LOG_OUT' })} to="/login"

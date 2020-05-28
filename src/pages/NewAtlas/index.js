@@ -70,8 +70,8 @@ export default function NewAtlas() {
   const [responsavel, setResponsavel] = useState("");
   const [revisor, setRevisor] = useState("");
   const [observacoes, setObservacoes] = useState("");
-
   const [modalShow, setModalShow] = React.useState(false);
+
   const config = {
     headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
   };
@@ -117,6 +117,10 @@ export default function NewAtlas() {
   const handleChangeMun = (event) => {
     setMunicipio(event.target.value);
   };
+  function inverter(string) {
+    let data = string.split('-')
+    return `${data[2]}/${data[1]}/${data[0]}`
+  }
 
   async function submitData(props) {
     if (!codMeso || !microrregiao || !municipio || !toponimo) {
@@ -125,10 +129,14 @@ export default function NewAtlas() {
       return
     }
     props.onHide()
+    let aux = codMeso.split('-');
+    let meso = aux[1];
+    let aux2 = microrregiao.split('-');
+    let micro = aux2[1];
     try {
       const response = await apiAtema.post('atema', {
-        mesorregiao: codMeso,
-        microrregiao: microrregiao,
+        mesorregiao: meso,
+        microrregiao: micro,
         municipio: municipio,
         toponimo: toponimo,
         variante: variante,
@@ -140,7 +148,7 @@ export default function NewAtlas() {
         estruturaMorfologica: estruturaMorfologica,
         referencias: referencias,
         fonte: fonte,
-        dataColeta: dataColeta,
+        dataColeta: inverter(dataColeta.toString()),
         responsavel: responsavel,
         revisor: revisor,
         observacoes: observacoes

@@ -8,6 +8,8 @@ import Login from './pages/Login'
 import NewAtlas from './pages/NewAtlas'
 import Blog from './pages/Blog'
 import Users from './pages/Users'
+import ForgotPassword from './pages/forgotPassword'
+import RecoverPassword from './pages/RecoverPassword'
 //REDUX
 import { store, persistor } from './store/';
 import { Provider } from 'react-redux';
@@ -22,6 +24,8 @@ function App() {
         <Router>
           <Route exact path='/' component={Blog} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/ForgotPassword' component={ForgotPassword} />
+          <Route exact path='/recoverpassword' component={RecoverPassword} />
           <Route exact path='/atlas' component={Atlas} />
           <Route exact path='/users' component={Users} />
           <Route exact path='/atlas/novoatlas' component={NewAtlas} />
