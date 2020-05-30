@@ -9,6 +9,7 @@ import Language from '@material-ui/icons/Language';
 import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
+import Settings from '@material-ui/icons/Settings';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import './styles.css';
 
@@ -44,12 +45,22 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="RELACIONAR DADOS" />
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="POSTS" />
-    </ListItem>
+    <Link className="link" to='/posts'>
+      <ListItem button>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="POSTS" />
+      </ListItem>
+    </Link>
+    <Link className="link" to='/settings'>
+      <ListItem button>
+        <ListItemIcon>
+          <Settings />
+        </ListItemIcon>
+        <ListItemText primary="AJUSTES" />
+      </ListItem>
+    </Link>
   </div>
 );
 

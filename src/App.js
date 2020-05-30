@@ -10,6 +10,8 @@ import Blog from './pages/Blog'
 import Users from './pages/Users'
 import ForgotPassword from './pages/forgotPassword'
 import RecoverPassword from './pages/RecoverPassword'
+import Posts from './pages/Posts'
+import Settings from './pages/Settings'
 //REDUX
 import { store, persistor } from './store/';
 import { Provider } from 'react-redux';
@@ -28,6 +30,8 @@ function App() {
           <Route exact path='/recoverpassword' component={RecoverPassword} />
           <Route exact path='/atlas' component={Atlas} />
           <Route exact path='/users' component={Users} />
+          <Route exact path='/posts' component={Posts} />
+          <Route exact path='/settings' component={Settings} />
           <Route exact path='/atlas/novoatlas' component={NewAtlas} />
         </Router>
       </PersistGate>

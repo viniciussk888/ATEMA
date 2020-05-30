@@ -55,7 +55,45 @@ export default function RecoverPassword() {
   const classes = useStyles();
 
   const [codigo, setCodigo] = useState("");
+  const [message, setMessage] = useState("Digite o código para validar!");
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
   const [valido, setValido] = useState(false);
+
+  async function savePassword() {
+    try {
+      const response = await apiAtema.put('passwords', {
+        token: codigo,
+        newPassword: password
+      })
+      if (response.status == 204) {
+        setMessage("SENHA ALTERADA COM SUCESSO!!")
+        setTimeout(() => {
+          history.push('/login')
+        }, 2000);
+      }
+    } catch (erro) {
+      alert("Erro ao salvar senha" + erro.message)
+    }
+  }
+
+  async function validate(e) {
+    e.preventDefault()
+    if (!codigo) {
+      alert("Digite o código recebido no e-mail!")
+      return
+    }
+    try {
+      const response = await apiAtema.post('validate', {
+        token: codigo
+      })
+      setId(response.data.toString())
+      setValido(true)
+      setMessage("Código validado com sucesso!!")
+    } catch (erro) {
+      alert(erro)
+    }
+  }
 
 
   return (
@@ -77,7 +115,7 @@ export default function RecoverPassword() {
 
               Criar nova senha
           </Typography>
-            <form className={classes.form} noValidate>
+            <form onSubmit={validate} className={classes.form} noValidate>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -86,32 +124,48 @@ export default function RecoverPassword() {
                 id="codigo"
                 label="Informe o código"
                 name="codigo"
+                hidden={valido}
                 autoFocus
                 onChange={(e) => setCodigo(e.target.value)}
               />
               <Button
                 type="submit"
                 fullWidth
+                hidden={valido}
                 variant="contained"
                 color="primary"
                 className={classes.submit}
               >
                 Validar código
             </Button>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="password"
+                type="password"
+                label="Nova senha"
+                name="password"
+                hidden={!valido}
+                autoFocus
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button
+                onClick={savePassword}
+                fullWidth
+                hidden={!valido}
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Salvar
+            </Button>
               <Grid container>
                 <Grid item xs>
-                  Sera enviado um e-mail com o código recuperação!<br />
-                    Caso não chegue, verifique a caixa de spam ou tente novamente!
+                  <center><p><strong>{message}</strong></p></center>
                 </Grid>
-                {/*<Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-               </Grid>*/}
               </Grid>
-              <Box mt={5}>
-                {/*<Copyright />*/}
-              </Box>
             </form>
           </div>
         </Grid>

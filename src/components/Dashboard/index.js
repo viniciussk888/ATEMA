@@ -13,8 +13,7 @@ import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import Settings from '@material-ui/icons/Settings';
+
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems } from '../ListItems/';
 import { Redirect } from 'react-router-dom';
@@ -100,6 +99,9 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  settings: {
+    color: '#fff'
+  }
 }));
 
 export default function Dashboard(props) {
@@ -134,16 +136,14 @@ export default function Dashboard(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Bem Vindo {firstName(localStorage.getItem('username')) || "Visitante"}
+              Bem-vindo {firstName(localStorage.getItem('username')) || "Visitante"}
             </Typography>
             {/*<IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
-  </IconButton>
-            <IconButton color="inherit">
-              <Settings />
-            </IconButton>*/}
+  </IconButton>*/}
+
             <IconButton
               color="inherit"
               onClick={() => dispatch({ type: 'LOG_OUT' })} to="/login"

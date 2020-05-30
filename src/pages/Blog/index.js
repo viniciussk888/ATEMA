@@ -18,36 +18,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sections = [
-  { title: 'Sobre o ATEMA', url: '#' },
-  { title: 'Galeria', url: '#' },
-  { title: 'Contato', url: '#' },
-  { title: 'Posts', url: '#' },
-];
+
 
 const mainFeaturedPost = {
-  title: 'Title of a longer featured blog post',
+  title: 'ATLAS TOPONÍMICO DO ESTADO DO MARANHÃO',
   description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-  image: 'https://source.unsplash.com/random',
+    "Os topônimos são nomes fundamentais no processo interativo homem-língua-meio por identificarem particularmente as entidades geográficas com que convivem os utentes da língua.",
+  image: '/images/balsas.jpg',
   imgText: 'main image description',
-  linkText: 'Continue reading…',
 };
 
 const featuredPosts = [
   {
-    title: 'Featured post',
+    title: 'POSTAGEM 1',
     date: 'Nov 12',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'previa de texto.',
     image: 'https://source.unsplash.com/random',
     imageText: 'Image Text',
   },
   {
-    title: 'Post title',
+    title: 'POSTAGEM 2',
     date: 'Nov 11',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'previa de texto',
     image: 'https://source.unsplash.com/random',
     imageText: 'Image Text',
   },
@@ -63,7 +57,7 @@ export default function Blog() {
       <React.Fragment>
         <CssBaseline />
         <Container maxWidth="lg">
-          <Header sections={sections} />
+          <Header />
           <main>
             <MainFeaturedPost post={mainFeaturedPost} />
             <Grid container spacing={4}>
@@ -74,7 +68,7 @@ export default function Blog() {
           </main>
         </Container>
         <Grid><center>-</center></Grid>
-        <Footer title="Footer" description="Something here to give the footer a purpose!" />
+        <Footer title="Projeto Institucional" description="Universidade Estadual do Maranhão" />
       </React.Fragment>
     </Dashboard>
   );
