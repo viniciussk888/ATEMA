@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -105,6 +106,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -115,8 +117,13 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   function firstName(name) {
-    let aux = name.split(' ')
-    return aux[0].toUpperCase()
+    try {
+      let aux = name.split(' ')
+      return aux[0].toUpperCase()
+    } catch (erro) {
+      history.push('/login')
+    }
+
   }
 
   return (

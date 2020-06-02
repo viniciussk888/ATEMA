@@ -50,6 +50,11 @@ export default function NewAtlas() {
   //states buscas API
   const [microrregioes, setMicorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
+  const [selectElemento, setSelectElemento] = useState([]);
+  const [selectLingua, setSelectLingua] = useState([]);
+  const [selectEtimologia, setSelectEtimologia] = useState([]);
+  const [selectTaxonomia, setSelectTaxonomia] = useState([]);
+
   // select
   const [codMeso, setCodMeso] = useState("");//MESOREGIAO COD+NOME
   const [municipio, setMunicipio] = useState("");
@@ -75,6 +80,23 @@ export default function NewAtlas() {
   const config = {
     headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await apiAtema.get('elemento', config)
+      setSelectElemento(response.data)
+
+      const response2 = await apiAtema.get('lingua', config)
+      setSelectLingua(response2.data)
+
+      const response3 = await apiAtema.get('etimologia', config)
+      setSelectEtimologia(response3.data)
+
+      const response4 = await apiAtema.get('taxonomia', config)
+      setSelectTaxonomia(response4.data)
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const insert = localStorage.getItem('insert');
@@ -314,18 +336,23 @@ export default function NewAtlas() {
               </Grid>
 
 
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  id="elementogeografico"
-                  name="elementogeografico"
-                  label="Elemento geográfico"
-                  defaultValue={elementogeografico}
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setElementogeografico(e.target.value)}
-                />
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Elemento geográfico</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setElementogeografico(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    {selectElemento.map(item => (
+                      <option value={item.name}>{item.name}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={3}>
                 <TextField
                   required
                   id="toponimo"
@@ -347,68 +374,95 @@ export default function NewAtlas() {
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
-                <TextField
-                  required
-                  id="tipo"
-                  name="tipo"
-                  label="Tipo"
-                  defaultValue={tipo}
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setTipo(e.target.value)}
-                />
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Tipo</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setTipo(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    <option value="Humano">Humano</option>
+                    <option value="Físico">Físico</option>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={2}>
-                <TextField id="area"
-                  name="area"
-                  label="Área"
-                  fullWidth
-                  variant="outlined"
-                  defaultValue={area}
-                  onChange={(e) => setArea(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <TextField id="linguaorigem"
-                  name="linguaorigem"
-                  label="Língua de Origem"
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => setLinguaOrigem(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  id="etimologia"
-                  name="etimologia"
-                  label="Etimologia"
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => setEtimologia(e.target.value)}
-                />
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Área</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setArea(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    <option value="Urbana">Urbana</option>
+                    <option value="Rural">Rural</option>
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  required
-                  id="taxionomia"
-                  name="taxionomia"
-                  label="Taxionomia"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setTaxionomia(e.target.value)}
-                />
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Língua de Origem</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setLinguaOrigem(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    {selectLingua.map(item => (
+                      <option value={item.name}>{item.name}</option>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  id="Estrutura"
-                  name="Estrutura"
-                  label="Estrutura morfológica"
-                  variant="outlined"
-                  fullWidth
-                  onChange={(e) => setEstruturaMorfologica(e.target.value)}
-                />
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Etimologia</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setEtimologia(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    {selectEtimologia.map(item => (
+                      <option value={item.name}>{item.name}</option>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Taxonomia</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setTaxionomia(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    {selectTaxonomia.map(item => (
+                      <option value={item.name}>{item.name}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Estrutura Morfologica</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setEstruturaMorfologica(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    <option value="Simples">Simples</option>
+                    <option value="Composto">Composto</option>
+                    <option value="Simples híbrido">Simples híbrido</option>
+                    <option value="Composto híbrido">Composto híbrido</option>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={5}>
                 <TextField
                   id="referencias"
                   name="referencias"
@@ -418,7 +472,7 @@ export default function NewAtlas() {
                   onChange={(e) => setReferencias(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   id="fonte"
                   name="fonte"
@@ -440,7 +494,7 @@ export default function NewAtlas() {
                   onChange={(e) => setDataColeta(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={5}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   id="Responsável"
                   name="Responsável"
