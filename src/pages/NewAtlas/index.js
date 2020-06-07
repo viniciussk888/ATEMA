@@ -76,6 +76,7 @@ export default function NewAtlas() {
   const [revisor, setRevisor] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [modalShow, setModalShow] = React.useState(false);
+  const classes = useStyles();
 
   const config = {
     headers: { Authorization: `Bearer ${useSelector(state => state.token)}` }
@@ -274,7 +275,6 @@ export default function NewAtlas() {
     );
   }
 
-  const classes = useStyles();
   return (
     <Dashboard>
       <Grid item xs={12} className={classes.grid}>

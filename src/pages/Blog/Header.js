@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
+//import SearchIcon from '@material-ui/icons/Search';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+//import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -41,10 +41,9 @@ export default function Header(props) {
         >
           ATEMA
         </Typography>
-        <Linkin to='/atlas'>
+        <Linkin to='/login'>
           <Button variant="outlined" size="small">
-            Consultar Dados
-          <SearchIcon />
+            Entrar no sistema
           </Button>
         </Linkin>
       </Toolbar>

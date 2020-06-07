@@ -10,7 +10,6 @@ import Footer from './Footer';
 import post1 from './blog-post.1.md';
 import post2 from './blog-post.2.md';
 import post3 from './blog-post.3.md';
-import Dashboard from '../../components/Dashboard'
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -53,23 +52,21 @@ export default function Blog() {
   const classes = useStyles();
 
   return (
-    <Dashboard>
-      <React.Fragment>
-        <CssBaseline />
-        <Container maxWidth="lg">
-          <Header />
-          <main>
-            <MainFeaturedPost post={mainFeaturedPost} />
-            <Grid container spacing={4}>
-              {featuredPosts.map((post) => (
-                <FeaturedPost key={post.title} post={post} />
-              ))}
-            </Grid>
-          </main>
-        </Container>
-        <Grid><center>-</center></Grid>
-        <Footer title="Projeto Institucional" description="Universidade Estadual do Maranhão" />
-      </React.Fragment>
-    </Dashboard>
+    <React.Fragment>
+      <CssBaseline />
+      <Container maxWidth="lg">
+        <Header />
+        <main>
+          <MainFeaturedPost post={mainFeaturedPost} />
+          <Grid container spacing={4}>
+            {featuredPosts.map((post) => (
+              <FeaturedPost key={post.title} post={post} />
+            ))}
+          </Grid>
+        </main>
+      </Container>
+      <Grid><center>-</center></Grid>
+      <Footer title="Projeto Institucional" description="Universidade Estadual do Maranhão" />
+    </React.Fragment>
   );
 }

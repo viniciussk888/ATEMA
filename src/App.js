@@ -12,6 +12,8 @@ import ForgotPassword from './pages/forgotPassword'
 import RecoverPassword from './pages/RecoverPassword'
 import Posts from './pages/Posts'
 import Settings from './pages/Settings'
+import Relate from './pages/Relate'
+import Home from './pages/Home'
 //REDUX
 import { store, persistor } from './store/';
 import { Provider } from 'react-redux';
@@ -24,13 +26,15 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router>
-          <Route exact path='/' component={Blog} />
+          <Route exact path='/' component={Home} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/blog' component={Blog} />
           <Route exact path='/ForgotPassword' component={ForgotPassword} />
           <Route exact path='/recoverpassword' component={RecoverPassword} />
           <Route exact path='/atlas' component={Atlas} />
           <Route exact path='/users' component={Users} />
           <Route exact path='/posts' component={Posts} />
+          <Route exact path='/relate' component={Relate} />
           <Route exact path='/settings' component={Settings} />
           <Route exact path='/atlas/novoatlas' component={NewAtlas} />
         </Router>
