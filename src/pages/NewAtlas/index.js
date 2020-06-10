@@ -67,11 +67,12 @@ export default function NewAtlas() {
   const [area, setArea] = useState("Urbana");
   const [linguaOrigem, setLinguaOrigem] = useState("");
   const [etimologia, setEtimologia] = useState("");
+  const [etimologiaEsc, setEtimologiaEsc] = useState("");
   const [taxionomia, setTaxionomia] = useState("");
   const [estruturaMorfologica, setEstruturaMorfologica] = useState("");
   const [referencias, setReferencias] = useState("");
   const [fonte, setFonte] = useState("");
-  const [dataColeta, setDataColeta] = useState();
+  const [dataColeta, setDataColeta] = useState("Não Informado");
   const [responsavel, setResponsavel] = useState("");
   const [revisor, setRevisor] = useState("");
   const [observacoes, setObservacoes] = useState("");
@@ -141,8 +142,10 @@ export default function NewAtlas() {
     setMunicipio(event.target.value);
   };
   function inverter(string) {
-    let data = string.split('-')
-    return `${data[2]}/${data[1]}/${data[0]}`
+    if (string !== "Não Informado") {
+      let data = string.split('-')
+      return `${data[2]}/${data[1]}/${data[0]}`
+    }
   }
 
   async function submitData(props) {
@@ -167,6 +170,7 @@ export default function NewAtlas() {
         area: area,
         linguaOrigem: linguaOrigem,
         etimologia: etimologia,
+        etimologiaEsc: etimologiaEsc,
         taxionomia: taxionomia,
         estruturaMorfologica: estruturaMorfologica,
         referencias: referencias,
@@ -259,6 +263,8 @@ export default function NewAtlas() {
           <div className={classes.div}>
             <strong>Etimologia</strong>
             <p>{etimologia}</p>
+            <strong>Etimologia - Escrever</strong>
+            <p>{etimologiaEsc}</p>
             <strong>Observações</strong>
             <p>{observacoes}</p>
           </div>
@@ -418,21 +424,6 @@ export default function NewAtlas() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl variant="filled" className={classes.formControl}>
-                  <InputLabel htmlFor="filled-age-native-simple">Etimologia</InputLabel>
-                  <Select
-                    required
-                    native
-                    onChange={(e) => setEtimologia(e.target.value)}
-                  >
-                    <option selected disabled></option>
-                    {selectEtimologia.map(item => (
-                      <option value={item.name}>{item.name}</option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <FormControl variant="filled" className={classes.formControl}>
                   <InputLabel htmlFor="filled-age-native-simple">Taxonomia</InputLabel>
                   <Select
                     required
@@ -461,6 +452,31 @@ export default function NewAtlas() {
                     <option value="Composto híbrido">Composto híbrido</option>
                   </Select>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" className={classes.formControl}>
+                  <InputLabel htmlFor="filled-age-native-simple">Etimologia</InputLabel>
+                  <Select
+                    required
+                    native
+                    onChange={(e) => setEtimologia(e.target.value)}
+                  >
+                    <option selected disabled></option>
+                    {selectEtimologia.map(item => (
+                      <option value={item.name}>{item.name}</option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  id="esc"
+                  name="esc"
+                  label="Etimologia - Escrever"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setEtimologiaEsc(e.target.value)}
+                />
               </Grid>
               <Grid item xs={12} sm={5}>
                 <TextField

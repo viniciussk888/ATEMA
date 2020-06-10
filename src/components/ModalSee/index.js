@@ -118,6 +118,8 @@ export default function See(props) {
         <div className={classes.div}>
           <strong>Etimologia</strong>
           <p>{data.etimologia}</p>
+          <strong>Etimologia - Escrever</strong>
+          <p>{data.etimologiaEsc}</p>
           <strong>Observações</strong>
           <p>{data.observacoes}</p>
         </div>

@@ -17,8 +17,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
+import { Doughnut } from 'react-chartjs-2';
 
-import Graphic from '../../components/Graphic'
 import apiAtema from "../../services/apiAtema";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 3
   },
   table: {
-    minWidth: 450,
+    maxWidth: 600,
   },
 }));
 
@@ -44,8 +44,8 @@ export default function Relate() {
   const [tableName, setTableName] = useState('')
   const [result, setResult] = useState([])
   const [aux, setAux] = useState(false)
-  var [names, setNames] = useState([])
   const [totals, setTotals] = useState([])
+  const [names, setNames] = useState([])
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -61,7 +61,42 @@ export default function Relate() {
     setResult(response.data[0])
     setTableName(value)
     setAux(true)
+    formalize(response.data[0])
   }
+
+  function formalize(data) {
+    let names = []
+    let totals = []
+    data.map((item) => (
+      names.push(item.name)
+    ))
+    data.map((item) => (
+      totals.push(item.total)
+    ))
+    setNames(names)
+    setTotals(totals)
+  }
+
+  const data = {
+    datasets: [{
+      data: totals,
+      backgroundColor: [
+        '#6A5ACD',
+        '#2F4F4F',
+        '#00FF00',
+        '#A0522D',
+        '#4B0082',
+        '#FF0000',
+        '#FF4500',
+        '#FFFF00',
+        '#D8BFD8',
+        '#F0F8FF',
+        '#F0E68C',
+        '#800000'
+      ],
+    }],
+    labels: names,
+  };
 
   return (
     <>
@@ -195,7 +230,7 @@ export default function Relate() {
                   </TableContainer>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Graphic dados={result} />
+                  <Doughnut data={data} />
                 </Grid>
               </Grid>
 
