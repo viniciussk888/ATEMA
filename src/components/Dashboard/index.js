@@ -10,13 +10,12 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import { mainListItems, secondaryListItems } from '../ListItems/';
+import { mainListItems } from '../ListItems/';//secundarylist
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -128,7 +127,7 @@ export default function Dashboard(props) {
 
   return (
     <>
-      {useSelector(state => state.usuarioLogado) === 0 ? <Redirect to='/login' /> : null}
+      {useSelector(state => state.usuarioLogado) === 0 ? <Redirect to='/blog' /> : null}
       <div className={classes.root}>
         <CssBaseline />
         <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>

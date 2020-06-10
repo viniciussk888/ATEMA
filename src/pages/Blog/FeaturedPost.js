@@ -25,6 +25,11 @@ export default function FeaturedPost(props) {
   const classes = useStyles();
   const { post } = props;
 
+  function resumeContent(content) {
+    const resume = content.split(' ')
+    return resume[0] + " " + resume[1] + " " + resume[2] + " " + resume[3] + " " + resume[4] + " " + resume[5] + " " + resume[6] + "..."
+  }
+
   return (
     <Grid item xs={12} md={6}>
       <CardActionArea component="a" href="#">
@@ -35,10 +40,13 @@ export default function FeaturedPost(props) {
                 {post.title}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                {post.date}
+                {post.created_at}
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                {post.author}
               </Typography>
               <Typography variant="subtitle1" paragraph>
-                {post.description}
+                {resumeContent(post.content)}
               </Typography>
               <Typography variant="subtitle1" color="primary">
                 Continue lendo...
@@ -46,7 +54,7 @@ export default function FeaturedPost(props) {
             </CardContent>
           </div>
           <Hidden xsDown>
-            <CardMedia className={classes.cardMedia} image={post.image} title={post.imageTitle} />
+            <CardMedia className={classes.cardMedia} image={post.image} />
           </Hidden>
         </Card>
       </CardActionArea>

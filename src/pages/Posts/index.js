@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import Dashboard from '../../components/Dashboard';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Posts() {
+  const history = useHistory()
   const [file, setFile] = useState('');
   const classes = useStyles();
   const [title, setTitle] = useState('')
@@ -81,6 +83,28 @@ export default function Posts() {
     }, config)
     setAux(Math.random)
   }
+  async function deletePost(id) {
+    const r = window.confirm(`Confirma a EXCLUSÃO?`);
+    if (r == true) {
+      try {
+        await apiAtema.delete(`post/${id}`, config)
+        setAux(Math.random)
+      } catch (error) {
+        alert("Erro ao deletar!! tente novamente...")
+      }
+    } else {
+      return
+    }
+  }
+
+  useEffect(() => {
+    const admin = localStorage.getItem('admin');
+    const blog = localStorage.getItem('blog');
+    if (admin == 0 && blog == 0) {
+      alert('Sem permissão para a operação!')
+      history.push('/')
+    }
+  }, [])
 
   useEffect(() => {
     async function fetchData() {
@@ -179,6 +203,7 @@ export default function Posts() {
                             Autor: {item.author}
                           </Typography>
                           <IconButton
+                            onClick={() => (deletePost(item.id))}
                             color="secondary"
                             aria-label="Deletar">
                             <DeleteIcon />
