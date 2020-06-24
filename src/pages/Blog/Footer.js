@@ -7,9 +7,9 @@ import Link from '@material-ui/core/Link';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="primary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://viniciusportfolio.herokuapp.com/#about">
+      <Link color="primary" href="https://viniciusportfolio.herokuapp.com/#about">
         Desenvolvido por Vinicius Martins & Armando Jr
       </Link><br />{' '}
       {new Date().getFullYear()}
@@ -20,10 +20,13 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   footer: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#1C1C1C',
     // marginTop: theme.spacing(8),
     padding: theme.spacing(6, 0),
   },
+  color: {
+    color: '#fff'
+  }
 }));
 
 export default function Footer(props) {
@@ -33,10 +36,10 @@ export default function Footer(props) {
   return (
     <footer className={classes.footer}>
       <Container maxWidth="lg">
-        <Typography variant="h6" align="center" gutterBottom>
+        <Typography variant="h6" align="center" className={classes.color} gutterBottom>
           {title}
         </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
+        <Typography variant="subtitle1" align="center" className={classes.color} component="p">
           {description}
         </Typography>
         <Copyright />

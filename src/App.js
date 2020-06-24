@@ -14,6 +14,7 @@ import Posts from './pages/Posts'
 import Settings from './pages/Settings'
 import Relate from './pages/Relate'
 import Home from './pages/Home'
+import PostBlog from './pages/Blog/PostBlog'
 //REDUX
 import { store, persistor } from './store/';
 import { Provider } from 'react-redux';
@@ -37,6 +38,7 @@ function App() {
           <Route exact path='/relate' component={Relate} />
           <Route exact path='/settings' component={Settings} />
           <Route exact path='/atlas/novoatlas' component={NewAtlas} />
+          <Route exact path='/blog/postblog' component={PostBlog} />
         </Router>
       </PersistGate>
     </Provider>

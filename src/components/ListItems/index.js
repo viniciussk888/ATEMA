@@ -31,20 +31,20 @@ export const mainListItems = (
         <ListItemText primary="ATLAS TOPONÍMICO" />
       </ListItem>
     </Link>
-    <Link className="link" to='/users'>
-      <ListItem button>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText primary="USUÁRIOS" />
-      </ListItem>
-    </Link>
     <Link className="link" to='/relate'>
       <ListItem button>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="RELACIONAR DADOS" />
+      </ListItem>
+    </Link>
+    <Link className="link" to='/users'>
+      <ListItem button>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="USUÁRIOS" />
       </ListItem>
     </Link>
     <Link className="link" to='/posts'>
