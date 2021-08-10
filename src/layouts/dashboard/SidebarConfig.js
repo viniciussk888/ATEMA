@@ -17,7 +17,7 @@ const sidebarConfig = [
   },
   {
     title: 'Atlas toponímico',
-    path: '/dashboard/user',
+    path: '/dashboard/atlas',
     icon: getIcon(fileTextFill)
   },
   {

@@ -8,7 +8,7 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
-import User from './pages/User';
+import AtlasToponimico from './pages/AtlasToponimico';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
@@ -21,7 +21,7 @@ export default function Router() {
       children: [
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
+        { path: 'atlas', element: <AtlasToponimico /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
       ]

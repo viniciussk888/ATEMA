@@ -132,11 +132,11 @@ export default function User() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User | ATEMA">
+    <Page title="Atlas Toponímico | ATEMA">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+          Atlas Toponímico
           </Typography>
           <Button
             variant="contained"
@@ -144,7 +144,7 @@ export default function User() {
             to="#"
             startIcon={<Icon icon={plusFill} />}
           >
-            New User
+            Adicionar dados
           </Button>
         </Stack>
 
