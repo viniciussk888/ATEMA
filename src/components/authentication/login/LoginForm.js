@@ -47,6 +47,7 @@ export default function LoginForm() {
         })
         dispatch({ type: 'LOG_IN', usuarioEmail: values.email, token: response.data[0].token });
         localStorage.setItem('@atema#username', response.data[1].username)
+        localStorage.setItem('@atema#email', values.email)
         localStorage.setItem('@atema#admin', response.data[1].admin);
         localStorage.setItem('@atema#insert', response.data[1].insert);
         localStorage.setItem('@atema#update', response.data[1].update);
