@@ -40,7 +40,7 @@ const TABLE_HEAD = [
   { id: '' }
 ];
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -136,7 +136,7 @@ export default function User() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-          Atlas Toponímico
+            Atlas Toponímico
           </Typography>
           <Button
             variant="contained"
