@@ -63,7 +63,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search user..."
+          placeholder="Filtrar pelo município..."
           startAdornment={
             <InputAdornment position="start">
               <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
@@ -79,7 +79,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
+        <Tooltip title="Lista filtrada">
           <IconButton>
             <Icon icon={roundFilterList} />
           </IconButton>

@@ -39,6 +39,7 @@ export default function SearchAtemas({ setAtemasInfo }) {
         municipio: municipio
       });
       if (response.status === 200 && response.data.length === 0) {
+        setAtemasInfo([]);
         return alert('Nenhuma informação encontrada para região informada!');
       }
       setAtemasInfo(response.data);
