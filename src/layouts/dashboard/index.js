@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Outlet } from 'react-router-dom';
 // material
 import { styled } from '@material-ui/core/styles';
 //
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +35,19 @@ const MainStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false);
+  const auth = useSelector(state => state.usuarioLogado);
+
+  const checkAuth = useCallback(()=>{
+    if(auth===0){
+      navigate('/login')
+    }
+  },[auth,navigate])
+
+  useEffect(()=>{
+    checkAuth()
+  },[checkAuth])
 
   return (
     <RootStyle>
