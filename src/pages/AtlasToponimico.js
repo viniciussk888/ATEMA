@@ -188,7 +188,7 @@ export default function User() {
                           <TableCell align="left">{linguaOrigem}</TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <UserMoreMenu atemaId={id} />
                           </TableCell>
                         </TableRow>
                       );
