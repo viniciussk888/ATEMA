@@ -24,6 +24,7 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import SearchAtemas from '../components/SearchAtemas';
 //
 import USERLIST from '../_mocks_/user';
 
@@ -70,12 +71,17 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function User() {
+  const [atemas, setAtemas] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const setAtemasInformations = (data) => {
+    setAtemas(data);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -126,6 +132,10 @@ export default function User() {
           >
             Adicionar dados
           </Button>
+        </Stack>
+
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <SearchAtemas setAtemasInfo={setAtemasInformations} />
         </Stack>
 
         <Card>
