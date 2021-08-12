@@ -9,6 +9,7 @@ import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
 import AtlasToponimico from './pages/AtlasToponimico';
+import NovoAtlasToponimico from './pages/NovoAtlasToponimico';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
@@ -22,6 +23,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'atlas', element: <AtlasToponimico /> },
+        { path: 'atlas/novo', element: <NovoAtlasToponimico /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> }
       ]

@@ -10,9 +10,7 @@ UserListHead.propTypes = {
   orderBy: PropTypes.string,
   rowCount: PropTypes.number,
   headLabel: PropTypes.array,
-  numSelected: PropTypes.number,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func
+  onRequestSort: PropTypes.func
 };
 
 export default function UserListHead({ order, orderBy, headLabel, onRequestSort }) {
