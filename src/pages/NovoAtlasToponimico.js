@@ -63,7 +63,7 @@ export default function NovoAtlasToponimico() {
       setSelectElemento(response.data);
     }
     fetchData();
-  }, [config]);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -71,7 +71,7 @@ export default function NovoAtlasToponimico() {
       setSelectLingua(response2.data);
     }
     fetchData();
-  }, [config]);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -79,15 +79,19 @@ export default function NovoAtlasToponimico() {
       setSelectEtimologia(response3.data);
     }
     fetchData();
-  }, [config]);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
-      const response4 = await apiAtema.get('taxonomia', config);
-      setSelectTaxonomia(response4.data);
+      try {
+        const response4 = await apiAtema.get('taxonomia', config);
+        setSelectTaxonomia(response4.data);
+      } catch (error) {
+        alert(error);
+      }
     }
     fetchData();
-  }, [config]);
+  }, []);
 
   useEffect(() => {
     const insert = localStorage.getItem('insert');
