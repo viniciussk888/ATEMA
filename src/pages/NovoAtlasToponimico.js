@@ -36,7 +36,7 @@ export default function NovoAtlasToponimico() {
   const [municipio, setMunicipio] = useState('');
   const [microrregiao, setMicrorregiao] = useState('');
   // end select
-  const [elementogeografico, setElementogeografico] = useState('Cidade');
+  const [elementogeografico, setElementogeografico] = useState('');
   const [toponimo, setToponimo] = useState('');
   const [variante, setVariante] = useState('');
   const [tipo, setTipo] = useState('Humano');
@@ -187,6 +187,25 @@ export default function NovoAtlasToponimico() {
     setLoading(false);
   }
 
+  function resetData() {
+    setElementogeografico('');
+    setToponimo('');
+    setVariante('');
+    setTipo('Humano');
+    setArea('Urbana');
+    setLinguaOrigem('');
+    setEtimologia('');
+    setEtimologiaEsc('');
+    setTaxionomia('');
+    setEstruturaMorfologica('');
+    setReferencias('');
+    setFonte('');
+    setDataColeta('Não Informado');
+    setResponsavel('');
+    setRevisor('');
+    setObservacoes('');
+  }
+
   return (
     <Page title="Novo Atlas Toponímico | ATEMA">
       <Container>
@@ -259,6 +278,7 @@ export default function NovoAtlasToponimico() {
                   label="Topônimo"
                   variant="outlined"
                   fullWidth
+                  value={toponimo}
                   onChange={(e) => setToponimo(e.target.value)}
                 />
               </Grid>
@@ -269,12 +289,15 @@ export default function NovoAtlasToponimico() {
                   label="Variante"
                   variant="outlined"
                   fullWidth
+                  value={variante}
                   onChange={(e) => setVariante(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Tipo</InputLabel>
+                  <InputLabel value={tipo} htmlFor="filled-age-native-simple">
+                    Tipo
+                  </InputLabel>
                   <Select required native onChange={(e) => setTipo(e.target.value)}>
                     <option selected disabled></option>
                     <option value="Humano">Humano</option>
@@ -284,7 +307,9 @@ export default function NovoAtlasToponimico() {
               </Grid>
               <Grid item xs={12} sm={2}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Área</InputLabel>
+                  <InputLabel value={area} htmlFor="filled-age-native-simple">
+                    Área
+                  </InputLabel>
                   <Select required native onChange={(e) => setArea(e.target.value)}>
                     <option selected disabled></option>
                     <option value="Urbana">Urbana</option>
@@ -294,7 +319,9 @@ export default function NovoAtlasToponimico() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Língua de Origem</InputLabel>
+                  <InputLabel value={linguaOrigem} htmlFor="filled-age-native-simple">
+                    Língua de Origem
+                  </InputLabel>
                   <Select required native onChange={(e) => setLinguaOrigem(e.target.value)}>
                     <option selected disabled></option>
                     {selectLingua.map((item) => (
@@ -305,7 +332,9 @@ export default function NovoAtlasToponimico() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Taxonomia</InputLabel>
+                  <InputLabel value={taxionomia} htmlFor="filled-age-native-simple">
+                    Taxonomia
+                  </InputLabel>
                   <Select required native onChange={(e) => setTaxionomia(e.target.value)}>
                     <option selected disabled></option>
                     {selectTaxonomia.map((item) => (
@@ -316,7 +345,9 @@ export default function NovoAtlasToponimico() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Estrutura Morfologica</InputLabel>
+                  <InputLabel value={estruturaMorfologica} htmlFor="filled-age-native-simple">
+                    Estrutura Morfologica
+                  </InputLabel>
                   <Select required native onChange={(e) => setEstruturaMorfologica(e.target.value)}>
                     <option selected disabled></option>
                     <option value="Simples">Simples</option>
@@ -328,7 +359,9 @@ export default function NovoAtlasToponimico() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Etimologia</InputLabel>
+                  <InputLabel value={etimologia} htmlFor="filled-age-native-simple">
+                    Etimologia
+                  </InputLabel>
                   <Select required native onChange={(e) => setEtimologia(e.target.value)}>
                     <option selected disabled></option>
                     {selectEtimologia.map((item) => (
@@ -344,6 +377,7 @@ export default function NovoAtlasToponimico() {
                   label="Etimologia"
                   variant="outlined"
                   fullWidth
+                  value={etimologiaEsc}
                   onChange={(e) => setEtimologiaEsc(e.target.value)}
                 />
               </Grid>
@@ -354,6 +388,7 @@ export default function NovoAtlasToponimico() {
                   label="Referências"
                   variant="outlined"
                   fullWidth
+                  value={referencias}
                   onChange={(e) => setReferencias(e.target.value)}
                 />
               </Grid>
@@ -364,6 +399,7 @@ export default function NovoAtlasToponimico() {
                   label="Fonte (dados do mapa)"
                   variant="outlined"
                   fullWidth
+                  value={fonte}
                   onChange={(e) => setFonte(e.target.value)}
                 />
               </Grid>
@@ -373,6 +409,7 @@ export default function NovoAtlasToponimico() {
                   label="Data da coleta"
                   type="date"
                   variant="outlined"
+                  value={dataColeta}
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -386,6 +423,7 @@ export default function NovoAtlasToponimico() {
                   label="Responsável pela coleta"
                   variant="outlined"
                   fullWidth
+                  value={responsavel}
                   onChange={(e) => setResponsavel(e.target.value)}
                 />
               </Grid>
@@ -396,6 +434,7 @@ export default function NovoAtlasToponimico() {
                   label="Revisor"
                   variant="outlined"
                   fullWidth
+                  value={revisor}
                   onChange={(e) => setRevisor(e.target.value)}
                 />
               </Grid>
@@ -406,6 +445,7 @@ export default function NovoAtlasToponimico() {
                   label="Observações"
                   variant="outlined"
                   fullWidth
+                  value={observacoes}
                   onChange={(e) => setObservacoes(e.target.value)}
                 />
               </Grid>
@@ -416,9 +456,7 @@ export default function NovoAtlasToponimico() {
                   variant="contained"
                   color="secondary"
                   startIcon={<Clear />}
-                  onClick={() => {
-                    window.location.reload();
-                  }}
+                  onClick={resetData}
                 >
                   LIMPAR
                 </Button>
