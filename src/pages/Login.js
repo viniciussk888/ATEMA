@@ -37,8 +37,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function Login() {
   return (
     <RootStyle title="Login | ATEMA">
-      
-
       <MHidden width="mdDown">
         <SectionStyle>
           <img src="/static/illustrations/atema.jpg" alt="login" />
@@ -51,7 +49,9 @@ export default function Login() {
             <Typography variant="h4" gutterBottom>
               Entrar no sistema
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>Entre com suas credenciais aqui.</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>
+              Entre com suas credenciais aqui.
+            </Typography>
           </Stack>
 
           <LoginForm />

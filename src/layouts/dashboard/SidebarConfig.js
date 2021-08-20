@@ -32,7 +32,7 @@ const sidebarConfig = [
   },
   {
     title: 'Usuários',
-    path: '/login',
+    path: '/dashboard/users',
     icon: getIcon(personAddFill)
   },
   {
