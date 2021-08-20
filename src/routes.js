@@ -4,7 +4,7 @@ import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Login from './pages/Login';
-import Register from './pages/Register';
+import Dados from './pages/Dados';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
@@ -27,7 +27,8 @@ export default function Router() {
         { path: 'atlas/novo', element: <NovoAtlasToponimico /> },
         { path: 'products', element: <Products /> },
         { path: 'blog', element: <Blog /> },
-        { path: 'users', element: <Users /> }
+        { path: 'users', element: <Users /> },
+        { path: 'dados', element: <Dados /> }
       ]
     },
     {
@@ -35,7 +36,6 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'login', element: <Login /> },
-        { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }

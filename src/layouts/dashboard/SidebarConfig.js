@@ -37,7 +37,7 @@ const sidebarConfig = [
   },
   {
     title: 'Dados',
-    path: '/register',
+    path: '/dashboard/dados',
     icon: getIcon(folderFill)
   }
 ];
