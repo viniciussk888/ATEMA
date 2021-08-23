@@ -14,13 +14,12 @@ import {
   TextField,
   TableContainer,
   IconButton,
-  Card
+  Card,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-//import Create from '@material-ui/icons/Create';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 
 import { useSelector } from 'react-redux';
 import Page from '../components/Page';
@@ -41,11 +40,11 @@ export default function Users() {
   };
 
   const [state, setState] = React.useState({
-    insert: 0,
-    update: 0,
-    delete: 0,
-    blog: 0,
-    admin: 0
+    insert: false,
+    update: false,
+    delete: false,
+    blog: false,
+    admin: false
   });
 
   async function deleteUser(id, username) {

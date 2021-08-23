@@ -19,8 +19,8 @@ const MENU_OPTIONS = [
     label: 'Inicío',
     icon: homeFill,
     linkTo: '/'
-  },
- /* {
+  }
+  /* {
     label: 'Profile',
     icon: personFill,
     linkTo: '#'
@@ -38,8 +38,8 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const anchorRef = useRef(null);
-  const username = localStorage.getItem('@atema#username')
-  const email = localStorage.getItem('@atema#email')
+  const username = localStorage.getItem('@atema#username');
+  const email = localStorage.getItem('@atema#email');
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -49,15 +49,15 @@ export default function AccountPopover() {
     setOpen(false);
   };
 
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     try {
-      dispatch({ type: 'LOG_OUT' })
+      dispatch({ type: 'LOG_OUT' });
       localStorage.clear();
-      navigate('/login', { replace: true });
+      navigate('/blog', { replace: true });
     } catch (error) {
-      alert(error)
+      alert(error);
     }
-  }
+  };
 
   return (
     <>
@@ -81,7 +81,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src='/static/icons/user.png' alt="photoURL" />
+        <Avatar src="/static/icons/user.png" alt="photoURL" />
       </IconButton>
 
       <MenuPopover
@@ -92,10 +92,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {username||"Error"}
+            {username || 'Error'}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {email||"Error"}
+            {email || 'Error'}
           </Typography>
         </Box>
 

@@ -27,7 +27,7 @@ const sidebarConfig = [
   },
   {
     title: 'blog',
-    path: '/dashboard/blog',
+    path: '/dashboard/posts',
     icon: getIcon(fileTextFill)
   },
   {

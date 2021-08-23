@@ -35,19 +35,19 @@ const MainStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const auth = useSelector(state => state.usuarioLogado);
+  const auth = useSelector((state) => state.usuarioLogado);
 
-  const checkAuth = useCallback(()=>{
-    if(auth===0){
-      navigate('/login')
+  const checkAuth = useCallback(() => {
+    if (auth === 0) {
+      navigate('/blog');
     }
-  },[auth,navigate])
+  }, [auth, navigate]);
 
-  useEffect(()=>{
-    checkAuth()
-  },[checkAuth])
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   return (
     <RootStyle>

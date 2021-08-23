@@ -12,6 +12,7 @@ import AtlasToponimico from './pages/AtlasToponimico';
 import NovoAtlasToponimico from './pages/NovoAtlasToponimico';
 import NotFound from './pages/Page404';
 import Users from './pages/Users';
+import Posts from './pages/Posts';
 
 // ----------------------------------------------------------------------
 
@@ -26,15 +27,16 @@ export default function Router() {
         { path: 'atlas', element: <AtlasToponimico /> },
         { path: 'atlas/novo', element: <NovoAtlasToponimico /> },
         { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> },
         { path: 'users', element: <Users /> },
-        { path: 'dados', element: <Dados /> }
+        { path: 'dados', element: <Dados /> },
+        { path: 'posts', element: <Posts /> }
       ]
     },
     {
       path: '/',
       element: <LogoOnlyLayout />,
       children: [
+        { path: 'blog', element: <Blog /> },
         { path: 'login', element: <Login /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
