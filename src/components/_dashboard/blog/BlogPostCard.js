@@ -102,7 +102,10 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src="https://source.unsplash.com/user/erondu/1600x900" />
+          <CoverImgStyle
+            alt={title}
+            src={image || 'https://source.unsplash.com/user/erondu/1600x900'}
+          />
         </CardMediaStyle>
 
         <CardContent
