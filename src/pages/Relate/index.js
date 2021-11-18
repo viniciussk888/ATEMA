@@ -1,51 +1,50 @@
-import React, { useState, useEffect } from 'react'
-import Dashboard from '../../components/Dashboard';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import Dashboard from "../../components/Dashboard";
+import { makeStyles } from "@material-ui/core/styles";
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography'
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
-import { Doughnut } from 'react-chartjs-2';
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Icon from "@material-ui/core/Icon";
+import Button from "@material-ui/core/Button";
+import { Doughnut } from "react-chartjs-2";
 
 import apiAtema from "../../services/apiAtema";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
+    display: "flex",
+    overflow: "auto",
+    flexDirection: "column",
   },
   grid: {
     marginBottom: 5,
-    padding: 3
+    padding: 3,
   },
   table: {
     maxWidth: 600,
   },
 }));
 
-
 export default function Relate() {
   const classes = useStyles();
-  const [value, setValue] = React.useState('');
-  const [tableName, setTableName] = useState('')
-  const [result, setResult] = useState([])
-  const [aux, setAux] = useState(false)
-  const [totals, setTotals] = useState([])
-  const [names, setNames] = useState([])
+  const [value, setValue] = React.useState("");
+  const [tableName, setTableName] = useState("");
+  const [result, setResult] = useState([]);
+  const [aux, setAux] = useState(false);
+  const [totals, setTotals] = useState([]);
+  const [names, setNames] = useState([]);
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -53,48 +52,47 @@ export default function Relate() {
 
   async function relate() {
     if (!value) {
-      return alert("Selecione um campo!")
+      return alert("Selecione um campo!");
     }
-    const response = await apiAtema.post('relate', {
-      tableName: value
-    })
-    setResult(response.data[0])
-    setTableName(value)
-    setAux(true)
-    formalize(response.data[0])
+    const response = await apiAtema.post("relate", {
+      tableName: value,
+    });
+    console.warn(response.data.rows);
+    setResult(response.data.rows);
+    setTableName(value);
+    setAux(true);
+    formalize(response.data.rows);
   }
 
   function formalize(data) {
-    let names = []
-    let totals = []
-    data.map((item) => (
-      names.push(item.name)
-    ))
-    data.map((item) => (
-      totals.push(item.total)
-    ))
-    setNames(names)
-    setTotals(totals)
+    let names = [];
+    let totals = [];
+    data.map((item) => names.push(item.name));
+    data.map((item) => totals.push(item.total));
+    setNames(names);
+    setTotals(totals);
   }
 
   const data = {
-    datasets: [{
-      data: totals,
-      backgroundColor: [
-        '#6A5ACD',
-        '#2F4F4F',
-        '#00FF00',
-        '#A0522D',
-        '#4B0082',
-        '#FF0000',
-        '#FF4500',
-        '#FFFF00',
-        '#D8BFD8',
-        '#F0F8FF',
-        '#F0E68C',
-        '#800000'
-      ],
-    }],
+    datasets: [
+      {
+        data: totals,
+        backgroundColor: [
+          "#6A5ACD",
+          "#2F4F4F",
+          "#00FF00",
+          "#A0522D",
+          "#4B0082",
+          "#FF0000",
+          "#FF4500",
+          "#FFFF00",
+          "#D8BFD8",
+          "#F0F8FF",
+          "#F0E68C",
+          "#800000",
+        ],
+      },
+    ],
     labels: names,
   };
 
@@ -107,10 +105,16 @@ export default function Relate() {
               Selecione o campo
             </Typography>
             <Grid container spacing={3}>
-
               <Grid item xs={12} sm={8}>
                 <FormControl component="fieldset">
-                  <RadioGroup row aria-label="position" name="position" defaultValue="top" value={value} onChange={handleChange}>
+                  <RadioGroup
+                    row
+                    aria-label="position"
+                    name="position"
+                    defaultValue="top"
+                    value={value}
+                    onChange={handleChange}
+                  >
                     <FormControlLabel
                       value="mesorregiao"
                       control={<Radio color="primary" />}
@@ -192,19 +196,16 @@ export default function Relate() {
                   Gerar
                 </Button>
               </Grid>
-
             </Grid>
           </Paper>
         </Grid>
 
-        {aux === true ?
-
+        {aux === true ? (
           <Grid item xs={12} className={classes.grid}>
             <Paper className={classes.paper}>
-
               <Typography variant="h7" gutterBottom>
                 Resultado
-            </Typography>
+              </Typography>
 
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
@@ -212,8 +213,10 @@ export default function Relate() {
                     <Table className={classes.table} aria-label="simple table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>{tableName || "Campo"}</TableCell>
-                          <TableCell align="right">Total</TableCell>
+                          <TableCell>
+                            {tableName.toUpperCase() || "Campo"}
+                          </TableCell>
+                          <TableCell align="right">TOTAL</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -233,13 +236,12 @@ export default function Relate() {
                   <Doughnut data={data} />
                 </Grid>
               </Grid>
-
             </Paper>
           </Grid>
-          :
+        ) : (
           <br />
-        }
+        )}
       </Dashboard>
     </>
-  )
+  );
 }
