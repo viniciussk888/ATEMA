@@ -13,6 +13,7 @@ import NovoAtlasToponimico from './pages/NovoAtlasToponimico';
 import NotFound from './pages/Page404';
 import Users from './pages/Users';
 import Posts from './pages/Posts';
+import Post from './pages/Post';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,7 @@ export default function Router() {
       children: [
         { path: 'blog', element: <Blog /> },
         { path: 'login', element: <Login /> },
+        { path: 'post', element: <Post /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }
