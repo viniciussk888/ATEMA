@@ -23,4 +23,4 @@ Este projeto foi desenvolvido para o ATEMA - Atlas Toponímico do Estado do Mara
 
 ## 🆙 Demo
 
-<img src="https://user-images.githubusercontent.com/30902898/142771578-4ab77d5e-fd2f-4818-a930-a9a181b5a756.gif" width="650px">
+<img src="https://user-images.githubusercontent.com/30902898/142771578-4ab77d5e-fd2f-4818-a930-a9a181b5a756.gif" width="850px">
