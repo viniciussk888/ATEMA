@@ -1,40 +1,26 @@
-## Minimal [(Free version)](https://minimal-kit-react.vercel.app/)
+## Olá! <img src="https://raw.githubusercontent.com/victoralmeidadev/victoralmeidadev/master/wave.gif" width="30px">
 
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
+Este projeto foi desenvolvido para o ATEMA - Atlas Toponímico do Estado do Maranhão, mantido pela UEMA - Universidade do Estado do Maranhão.
 
-> Free React Admin Dashboard made with Material-UI components and React.
+# INTRODUÇÃO
 
-![preview](public/static/preview.png)
+  O estudo da Toponímia brasileira, como parte aplicada da lingüística geral, envolve, principalmente, e antes de tudo, o reconhecimento dos estratos dialetais que estruturaram, no território, a forma de expressão vernacular. É desse ângulo maior, ou seja, do reconhecimento etnolinguístico das camadas superpostas que se poderá buscar, então, as diversidades gramaticais, semânticas e etnográficas dos registros onomásticos.
+  
+# SISTEMA
+  O Sistema funciona como um sistema web, que fornece uma area logada para que os participantes do projeto ATEMA possam gravar e gerenciar os dados toponímicos coletados durante suas pesquisas. O sistema tem as seguintes funcionalidades:
+  - Login.
+  - Dashboard.
+  - CRUD de informaçoes toponímicas.
+  - Gerencia de usuarios.
+  - Geração de graficos e tabelas.
+  - blog
 
-| [Minimal Free](https://minimal-kit-react.vercel.app/) | [Minimal](https://material-ui.com/store/items/minimal-dashboard/) |
-| ----------------------------------------------------- | :---------------------------------------------------------------- |
-| **7** Demo pages                                      | **40** demo pages                                                 |
-| -                                                     | ✓ Multi-language                                                  |
-| -                                                     | ✓ Dark/Light Mode 🌓                                              |
-| -                                                     | ✓ [More components](https://minimals.cc/components)               |
-| -                                                     | ✓ TypeScript version                                              |
-| -                                                     | ✓ Design files (Figma & Sketch)                                   |
+## ⚡ Tecnologias utilizadas
 
-## Page demo
+![JavaScript](https://img.shields.io/badge/-JavaScript-black?style=flat-square&logo=javascript)
+![React](https://img.shields.io/badge/-React-black?style=flat-square&logo=react)
+![GitHub](https://img.shields.io/badge/-GitHub-black?style=flat-square&logo=github)
 
-- [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
-- [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
-- [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
-- [Login](https://minimal-kit-react.vercel.app/login)
-- [Register](https://minimal-kit-react.vercel.app/register)
-- [Not Found](https://minimal-kit-react.vercel.app/404)
+## 🆙 Demo
 
-## Getting started
-
-- Recommended `node js 14+` and `npm 6+`
-- Install dependencies: `npm install` or `yarn install`
-- Start the server: `npm run start` or `yarn start`
-
-## License
-
-Distributed under the MIT License. See [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) for more information.
-
-## Contact us
-
-Email Us: support@minimals.cc
+<img src="https://user-images.githubusercontent.com/30902898/142771578-4ab77d5e-fd2f-4818-a930-a9a181b5a756.gif" width="850px">
