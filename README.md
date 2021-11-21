@@ -1,6 +1,6 @@
 ## Olá! <img src="https://raw.githubusercontent.com/victoralmeidadev/victoralmeidadev/master/wave.gif" width="30px">
 
-Este projeto foi desenvolvido para o ATEMA - Atlas Toponímico do Estado do Maranhão, projeto desenvolvido pela UEMA - Universidade do Estado do Maranhão.
+Este projeto foi desenvolvido para o ATEMA - Atlas Toponímico do Estado do Maranhão, mantido pela UEMA - Universidade do Estado do Maranhão.
 
 # INTRODUÇÃO
 
