@@ -39,7 +39,7 @@ export default function Router() {
       children: [
         { path: 'blog', element: <Blog /> },
         { path: 'login', element: <Login /> },
-        { path: 'post', element: <Post /> },
+        { path: 'post/:id', element: <Post /> },
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }

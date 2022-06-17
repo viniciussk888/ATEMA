@@ -1,51 +1,71 @@
-import { styled } from '@material-ui/core/styles';
-import { Card, Stack, Container, Typography } from '@material-ui/core';
-// components
-import Page from '../components/Page';
-import { MHidden } from '../components/@material-extend';
-import { LoginForm } from '../components/authentication/login';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Hidden from '@material-ui/core/Hidden';
+import { useParams } from 'react-router-dom';
+import apiAtema from 'src/services/apiAtema';
+import { Button } from '@material-ui/core';
 
-// ----------------------------------------------------------------------
-
-const RootStyle = styled(Page)(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    display: 'flex'
-  }
-}));
-
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2)
-}));
-
-const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
-  margin: 'auto',
-  display: 'flex',
-  minHeight: '100vh',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  padding: theme.spacing(12, 0)
-}));
-
-// ----------------------------------------------------------------------
+const useStyles = makeStyles({
+  card: {
+    display: 'flex',
+    margin: 10,
+    overflow: 'auto'
+  },
+  cardDetails: {
+    flex: 1,
+  },
+  cardMedia: {
+    width: 400
+  },
+});
 
 export default function Post() {
-  return (
-    <RootStyle title="Post | ATEMA">
-      <MHidden width="mdDown">
-        <SectionStyle>
-          <img src="/static/illustrations/atema.jpg" alt="login" />
-        </SectionStyle>
-      </MHidden>
+  const classes = useStyles();
+  const [post, setPost] = useState({});
+  const params = useParams();
 
-      <Container maxWidth="sm">
-        <ContentStyle></ContentStyle>
-      </Container>
-    </RootStyle>
+  const getPost = async () => {
+    try {
+      const postId = params.id
+      const response = await apiAtema.get(`post/${postId}`)
+      setPost(response.data)
+    } catch (error) {
+      console.log(error)
+    }   
+  }
+
+  useEffect(()=>{
+    getPost()
+  },[])
+
+  return (
+        <Card className={classes.card}>
+          <div className={classes.cardDetails}>
+            <CardContent>
+              <Typography component="h2" variant="h5">
+                {post.title}
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                {post.created_at}
+              </Typography>
+              <Typography variant="subtitle1" paragraph>
+                {post.content}
+              </Typography>
+              <Typography variant="subtitle1" color="primary">
+                Autor: {post.author}
+              </Typography>
+            </CardContent>
+          </div>
+          <Hidden xsDown>
+            <CardMedia className={classes.cardMedia} image={post.image} title={post.title} />
+          </Hidden>
+        </Card>
   );
 }
