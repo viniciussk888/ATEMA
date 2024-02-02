@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiAtema = axios.create({
-  baseURL: 'https://atema-backend.herokuapp.com',
+  baseURL: 'https://atema-api.onrender.com',
 });
 
 export default apiAtema; 
