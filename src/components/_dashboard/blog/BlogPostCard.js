@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
 import { Link, Card, Grid, Avatar, Typography, CardContent } from '@material-ui/core';
@@ -47,7 +47,6 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const navigate = useNavigate();
   const { image, title, author, created_at } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;

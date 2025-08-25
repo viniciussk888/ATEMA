@@ -22,7 +22,7 @@ const sidebarConfig = [
   },
   {
     title: 'Relacionar dados',
-    path: '/dashboard/products',
+    path: '/dashboard/relate',
     icon: getIcon(pieChart2Fill)
   },
   {

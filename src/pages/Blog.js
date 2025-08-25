@@ -9,20 +9,14 @@ import { BlogPostCard } from '../components/_dashboard/blog';
 
 // ----------------------------------------------------------------------
 
-import { useSelector } from 'react-redux';
-
 import apiAtema from '../services/apiAtema';
 
 export default function Blog() {
   const [post, setPost] = useState([]);
 
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
-  };
-
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get('post', config);
+      const response = await apiAtema.get('post');
       setPost(response.data);
     }
     fetchData();

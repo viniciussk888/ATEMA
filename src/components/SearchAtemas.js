@@ -9,9 +9,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 
-import { useSelector } from 'react-redux';
 import apiAtema from '../services/apiAtema';
 import { LoadingButton } from '@material-ui/lab';
+import { toast } from 'react-toastify';
 
 export default function SearchAtemas({ setAtemasInfo }) {
   const [microrregioes, setMicorregioes] = useState([]);
@@ -19,16 +19,11 @@ export default function SearchAtemas({ setAtemasInfo }) {
   const [codMeso, setCodMeso] = useState(''); //MESOREGIAO COD+NOME
   const [municipio, setMunicipio] = useState('');
   const [microrregiao, setMicrorregiao] = useState('');
-  const [isSubmittingAll, setIsSubmittingAll] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
-  };
 
   async function filter() {
     if (!codMeso) {
-      return alert('Selecione a Mesorregião!');
+      return toast.error('Selecione a Mesorregião!');
     }
     setIsSubmitting(true);
     try {
@@ -44,31 +39,13 @@ export default function SearchAtemas({ setAtemasInfo }) {
       if (response.status === 200 && response.data.length === 0) {
         setAtemasInfo([]);
         setIsSubmitting(false);
-        return alert('Nenhuma informação encontrada para região informada!');
+        return toast.info('Nenhum registro encontrado!');
       }
       setAtemasInfo(response.data);
-      setIsSubmitting(false);
     } catch (error) {
+      toast.error('Erro ao filtrar os dados!');
+    } finally {
       setIsSubmitting(false);
-      alert('Erro ao filtrar os dados!' + error);
-    }
-    setIsSubmitting(false);
-  }
-
-  async function seeAll() {
-    setIsSubmittingAll(true);
-    try {
-      const response = await apiAtema.get('atema', config);
-      if (response.status === 200 && response.data.length === 0) {
-        setAtemasInfo([]);
-        setIsSubmittingAll(false);
-        return alert('Nenhuma informação encontrada!');
-      }
-      setAtemasInfo(response.data);
-      setIsSubmittingAll(false);
-    } catch (error) {
-      alert('Erro ao buscar dados!' + error);
-      setIsSubmittingAll(false);
     }
   }
 
@@ -167,7 +144,7 @@ export default function SearchAtemas({ setAtemasInfo }) {
                 fullWidth
                 size="large"
                 variant="contained"
-                loading={isSubmittingAll}
+                loading={isSubmitting}
               >
                 BUSCAR
               </LoadingButton>

@@ -32,7 +32,7 @@ const TABLE_HEAD = [
   { id: 'Microrregião', label: 'Microrregião', alignRight: false },
   { id: 'Topônimo', label: 'Topônimo', alignRight: false },
   { id: 'Língua de Origem', label: 'Língua de Origem', alignRight: false },
-  { id: '' }
+  { id: 'Ação', label: 'Ação', alignRight: true }
 ];
 
 // ---------------------------------------------------------------------
@@ -63,7 +63,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) => _user.toponimo.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_user) => _user?.toponimo?.toLowerCase()?.indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
@@ -163,7 +163,7 @@ export default function AtlasToponimico() {
                           <TableCell align="left">{linguaOrigem}</TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu atemaId={id} />
+                            <UserMoreMenu atemaId={id} setAtemas={setAtemas} />
                           </TableCell>
                         </TableRow>
                       );

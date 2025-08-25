@@ -9,8 +9,8 @@ import { makeStyles } from '@material-ui/styles';
 import Table from 'react-bootstrap/Table';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 import apiAtema from '../../../services/apiAtema';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -28,22 +28,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function UserMoreMenu({ atemaId }) {
+export default function UserMoreMenu({ atemaId, setAtemas }) {
   const classes = useStyles();
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
 
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
-  };
-
   async function getData() {
     if (data.length === 0) {
-      const response = await apiAtema.get(`atema/${atemaId}`, config);
+      const response = await apiAtema.get(`atema/${atemaId}`);
       setData(response.data);
-      console.warn(response.data);
     }
   }
 
@@ -60,16 +55,17 @@ export default function UserMoreMenu({ atemaId }) {
     const update = sessionStorage.getItem('@atema#update');
     const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0 && update === 0) {
-      alert('Sem permissão para a operação!');
+      toast.error('Você não tem permissão para a operação!');
       return;
     }
-    const r = window.confirm(`Confirma a EXCLUSÃO?`);
+    const r = window.confirm(`Deseja realmente deletar o registro de ID ${atemaId}?`);
     if (r === true) {
       try {
-        await apiAtema.delete(`atema/${atemaId}`, config);
-        window.location.reload();
+        await apiAtema.delete(`atema/${atemaId}`);
+        toast.success('Deletado com sucesso!');
+        setAtemas((oldAtemas) => oldAtemas.filter((atema) => atema.id !== atemaId));
       } catch (error) {
-        alert('Erro ao deletar!! ' + error);
+        toast.error('Erro ao deletar o registro!');
       }
     } else {
       return;

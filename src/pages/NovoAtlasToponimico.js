@@ -1,355 +1,319 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
+import {
+  Grid,
+  Typography,
+  TextField,
+  FormControl,
+  Select,
+  InputLabel,
+  Button,
+  Card,
+  Container
+} from '@material-ui/core';
+import { LoadingButton } from '@material-ui/lab';
 import Clear from '@material-ui/icons/Clear';
-import Container from '@material-ui/core/Container';
-//apis
+
 import apiMeso from '../services/apiMeso';
 import apiMun from '../services/apiMun';
 import apiAtema from '../services/apiAtema';
 import mesorregioes from '../utils/mesorregioes.json';
 import { useSelector } from 'react-redux';
 import Page from '../components/Page';
-import { LoadingButton } from '@material-ui/lab';
+import { toast } from 'react-toastify';
 
 export default function NovoAtlasToponimico() {
   const navigate = useNavigate();
+  const token = useSelector((state) => state.token);
+
   const [loading, setLoading] = useState(false);
-  //states buscas API
-  const [microrregioes, setMicorregioes] = useState([]);
+  const [microrregioes, setMicrorregioes] = useState([]);
   const [municipios, setMunicipios] = useState([]);
-  const [selectElemento, setSelectElemento] = useState([]);
-  const [selectLingua, setSelectLingua] = useState([]);
-  const [selectEtimologia, setSelectEtimologia] = useState([]);
-  const [selectTaxonomia, setSelectTaxonomia] = useState([]);
+  const [options, setOptions] = useState({
+    elementos: [],
+    linguas: [],
+    etimologias: [],
+    taxonomias: []
+  });
 
-  // select
-  const [codMeso, setCodMeso] = useState(''); //MESOREGIAO COD+NOME
-  const [municipio, setMunicipio] = useState('');
-  const [microrregiao, setMicrorregiao] = useState('');
-  // end select
-  const [elementogeografico, setElementogeografico] = useState('');
-  const [toponimo, setToponimo] = useState('');
-  const [variante, setVariante] = useState('');
-  const [tipo, setTipo] = useState('Humano');
-  const [area, setArea] = useState('Urbana');
-  const [linguaOrigem, setLinguaOrigem] = useState('');
-  const [etimologia, setEtimologia] = useState('');
-  const [etimologiaEsc, setEtimologiaEsc] = useState('');
-  const [taxionomia, setTaxionomia] = useState('');
-  const [estruturaMorfologica, setEstruturaMorfologica] = useState('');
-  const [referencias, setReferencias] = useState('');
-  const [fonte, setFonte] = useState('');
-  const [dataColeta, setDataColeta] = useState('Não Informado');
-  const [responsavel, setResponsavel] = useState('');
-  const [revisor, setRevisor] = useState('');
-  const [observacoes, setObservacoes] = useState('');
+  const [formData, setFormData] = useState({
+    codMeso: '',
+    microrregiao: '',
+    municipio: '',
+    elementogeografico: '',
+    toponimo: '',
+    variante: '',
+    tipo: 'Humano',
+    area: 'Urbana',
+    linguaOrigem: '',
+    etimologia: '',
+    etimologiaEsc: '',
+    taxionomia: '',
+    estruturaMorfologica: '',
+    referencias: '',
+    fonte: '',
+    dataColeta: 'Não Informado',
+    responsavel: '',
+    revisor: '',
+    observacoes: ''
+  });
 
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
+  const handleChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await apiAtema.get('elemento', config);
-      setSelectElemento(response.data);
+  const inverterData = (str) => {
+    if (str && str !== 'Não Informado') {
+      const [y, m, d] = str.split('-');
+      return `${d}/${m}/${y}`;
     }
-    fetchData();
-  }, []);
+    return str;
+  };
 
-  useEffect(() => {
-    async function fetchData() {
-      const response2 = await apiAtema.get('lingua', config);
-      setSelectLingua(response2.data);
-    }
-    fetchData();
-  }, []);
+  const resetForm = () =>
+    setFormData({
+      codMeso: '',
+      microrregiao: '',
+      municipio: '',
+      elementogeografico: '',
+      toponimo: '',
+      variante: '',
+      tipo: 'Humano',
+      area: 'Urbana',
+      linguaOrigem: '',
+      etimologia: '',
+      etimologiaEsc: '',
+      taxionomia: '',
+      estruturaMorfologica: '',
+      referencias: '',
+      fonte: '',
+      dataColeta: 'Não Informado',
+      responsavel: '',
+      revisor: '',
+      observacoes: ''
+    });
 
+  // 🔹 Busca selects iniciais
   useEffect(() => {
-    async function fetchData() {
-      const response3 = await apiAtema.get('etimologia', config);
-      setSelectEtimologia(response3.data);
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    async function fetchData() {
+    (async () => {
       try {
-        const response4 = await apiAtema.get('taxonomia', config);
-        setSelectTaxonomia(response4.data);
-      } catch (error) {
-        alert(error);
+        const [elem, ling, eti, tax] = await Promise.all([
+          apiAtema.get('elemento'),
+          apiAtema.get('lingua'),
+          apiAtema.get('etimologia'),
+          apiAtema.get('taxonomia')
+        ]);
+        setOptions({
+          elementos: elem.data,
+          linguas: ling.data,
+          etimologias: eti.data,
+          taxonomias: tax.data
+        });
+      } catch (e) {
+        toast.error('Erro ao carregar selects');
       }
-    }
-    fetchData();
-  }, []);
+    })();
+  }, [token]);
 
+  // 🔹 Verifica permissão
   useEffect(() => {
     const insert = sessionStorage.getItem('@atema#insert');
     const admin = sessionStorage.getItem('@atema#admin');
-    if (admin === 0 && insert === 0) {
-      alert('Sem permissão para a operação!');
+    if (admin === '0' && insert === '0') {
+      toast.error('Você não tem permissão para acessar essa página');
       navigate('atlas', { replace: true });
     }
   }, [navigate]);
 
+  // 🔹 Busca microrregiões
   useEffect(() => {
-    let aux = codMeso.split('-');
-    let id = aux[0];
+    if (!formData.codMeso) return;
+    const [id] = formData.codMeso.split('-');
+    apiMeso.get(`${id}/microrregioes`).then((res) => setMicrorregioes(res.data));
+  }, [formData.codMeso]);
 
-    async function fetchData() {
-      const response = await apiMeso.get(`${id}/microrregioes`);
-      setMicorregioes(response.data);
-    }
-    fetchData();
-  }, [codMeso]);
-
+  // 🔹 Busca municípios
   useEffect(() => {
-    let aux = microrregiao.split('-');
-    let id = aux[0];
+    if (!formData.microrregiao) return;
+    const [id] = formData.microrregiao.split('-');
+    apiMun.get(`${id}/municipios`).then((res) => setMunicipios(res.data));
+  }, [formData.microrregiao]);
 
-    async function fetchData() {
-      const response = await apiMun.get(`${id}/municipios`);
-      setMunicipios(response.data);
-    }
-    fetchData();
-  }, [microrregiao]);
-
-  const handleChangeMeso = (event) => {
-    setCodMeso(event.target.value);
-  };
-  const handleChangeMicro = (event) => {
-    setMicrorregiao(event.target.value);
-  };
-  const handleChangeMun = (event) => {
-    setMunicipio(event.target.value);
-  };
-  function inverter(string) {
-    if (string !== 'Não Informado') {
-      let data = string.split('-');
-      return `${data[2]}/${data[1]}/${data[0]}`;
-    }
-  }
-
-  async function submitData() {
+  const submitData = async () => {
+    const { codMeso, microrregiao, municipio, toponimo } = formData;
     if (!codMeso || !microrregiao || !municipio || !toponimo) {
-      alert('Dados de Região e Toponimo são nescessarios!');
+      toast.error('Dados de Região e Topônimo são necessários!');
       return;
     }
     setLoading(true);
-    let aux = codMeso.split('-');
-    let meso = aux[1];
-    let aux2 = microrregiao.split('-');
-    let micro = aux2[1];
-    try {
-      const response = await apiAtema.post(
-        'atema',
-        {
-          mesorregiao: meso,
-          microrregiao: micro,
-          municipio: municipio,
-          toponimo: toponimo,
-          variante: variante,
-          tipo: tipo,
-          area: area,
-          elementogeografico: elementogeografico,
-          linguaOrigem: linguaOrigem,
-          etimologia: etimologia,
-          etimologiaEsc: etimologiaEsc,
-          taxionomia: taxionomia,
-          estruturaMorfologica: estruturaMorfologica,
-          referencias: referencias,
-          fonte: fonte,
-          dataColeta: inverter(dataColeta.toString()),
-          responsavel: responsavel,
-          revisor: revisor,
-          observacoes: observacoes
-        },
-        config
-      );
-      if (response.status === 200 && response.data) {
-        setLoading(false);
-        alert('Dados Enviados Com Sucesso!!');
-      }
-    } catch (error) {
-      setLoading(false);
-      alert(error);
-    }
-    setLoading(false);
-  }
 
-  function resetData() {
-    setElementogeografico('');
-    setToponimo('');
-    setVariante('');
-    setTipo('Humano');
-    setArea('Urbana');
-    setLinguaOrigem('');
-    setEtimologia('');
-    setEtimologiaEsc('');
-    setTaxionomia('');
-    setEstruturaMorfologica('');
-    setReferencias('');
-    setFonte('');
-    setDataColeta('Não Informado');
-    setResponsavel('');
-    setRevisor('');
-    setObservacoes('');
-  }
+    const meso = codMeso.split('-')[1];
+    const micro = microrregiao.split('-')[1];
+
+    try {
+      await apiAtema.post('atema', {
+        ...formData,
+        mesorregiao: meso,
+        microrregiao: micro,
+        dataColeta: inverterData(formData.dataColeta)
+      });
+      toast.success('Dados enviados com sucesso!');
+      resetForm();
+    } catch (err) {
+      toast.error('Erro ao enviar dados');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Page title="Novo Atlas Toponímico | ATEMA">
       <Container>
-        <Typography variant="h6" gutterBottom>
-          <center>Informe os dados toponímico</center>
+        <Typography variant="h4" gutterBottom>
+          Informe os dados toponímicos
         </Typography>
-        <Card>
-          <div
-            style={{
-              padding: 24
-            }}
-          >
+        <Card style={{ marginBottom: 16, marginTop: 24 }}>
+          <div style={{ padding: 24 }}>
             <Grid container spacing={3}>
+              {/* Mesorregião */}
               <Grid item xs={12} sm={4}>
-                <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Mesorregião</InputLabel>
-                  <Select required native onChange={handleChangeMeso}>
-                    <option selected disabled value="Não selecionada">
-                      Selecione...
-                    </option>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Mesorregião</InputLabel>
+                  <Select native value={formData.codMeso} onChange={handleChange('codMeso')}>
+                    <option disabled value=""></option>
                     {mesorregioes.map((item) => (
-                      <option value={item.codigo + '-' + item.nome}>{item.nome}</option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Microrregião</InputLabel>
-                  <Select required native onChange={handleChangeMicro}>
-                    <option selected disabled value="Não selecionada">
-                      Selecione...
-                    </option>
-                    {microrregioes.map((item) => (
-                      <option value={item.id + '-' + item.nome}>{item.nome}</option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Município</InputLabel>
-                  <Select required native onChange={handleChangeMun}>
-                    <option selected disabled value="Não selecionada">
-                      Selecione...
-                    </option>
-                    {municipios.map((item) => (
-                      <option value={item.nome}>{item.nome}</option>
+                      <option key={item.codigo} value={`${item.codigo}-${item.nome}`}>
+                        {item.nome}
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12} sm={3}>
-                <FormControl variant="filled">
-                  <InputLabel htmlFor="filled-age-native-simple">Elemento geográfico</InputLabel>
-                  <Select required native onChange={(e) => setElementogeografico(e.target.value)}>
-                    <option selected disabled></option>
-                    {selectElemento.map((item) => (
-                      <option value={item.name}>{item.name}</option>
+              {/* Microrregião */}
+              <Grid item xs={12} sm={4}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Microrregião</InputLabel>
+                  <Select
+                    native
+                    value={formData.microrregiao}
+                    onChange={handleChange('microrregiao')}
+                  >
+                    <option disabled value=""></option>
+                    {microrregioes.map((item) => (
+                      <option key={item.id} value={`${item.id}-${item.nome}`}>
+                        {item.nome}
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Município */}
+              <Grid item xs={12} sm={4}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Município</InputLabel>
+                  <Select native value={formData.municipio} onChange={handleChange('municipio')}>
+                    <option disabled value=""></option>
+                    {municipios.map((item) => (
+                      <option key={item.nome} value={item.nome}>
+                        {item.nome}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Topônimo */}
               <Grid item xs={12} sm={3}>
                 <TextField
+                  fullWidth
                   required
-                  id="toponimo"
-                  name="toponimo"
                   label="Topônimo"
                   variant="outlined"
-                  fullWidth
-                  value={toponimo}
-                  onChange={(e) => setToponimo(e.target.value)}
+                  value={formData.toponimo}
+                  onChange={handleChange('toponimo')}
                 />
               </Grid>
-              <Grid item xs={12} sm={2}>
+
+              {/* Variante */}
+              <Grid item xs={12} sm={3}>
                 <TextField
-                  id="variante"
-                  name="variante"
+                  fullWidth
                   label="Variante"
                   variant="outlined"
-                  fullWidth
-                  value={variante}
-                  onChange={(e) => setVariante(e.target.value)}
+                  value={formData.variante}
+                  onChange={handleChange('variante')}
                 />
               </Grid>
-              <Grid item xs={12} sm={2}>
-                <FormControl variant="filled">
-                  <InputLabel value={tipo} htmlFor="filled-age-native-simple">
-                    Tipo
-                  </InputLabel>
-                  <Select required native onChange={(e) => setTipo(e.target.value)}>
-                    <option selected disabled></option>
+
+              {/* Tipo */}
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Tipo</InputLabel>
+                  <Select native value={formData.tipo} onChange={handleChange('tipo')}>
                     <option value="Humano">Humano</option>
                     <option value="Físico">Físico</option>
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={2}>
-                <FormControl variant="filled">
-                  <InputLabel value={area} htmlFor="filled-age-native-simple">
-                    Área
-                  </InputLabel>
-                  <Select required native onChange={(e) => setArea(e.target.value)}>
-                    <option selected disabled></option>
+
+              {/* Área */}
+              <Grid item xs={12} sm={3}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Área</InputLabel>
+                  <Select native value={formData.area} onChange={handleChange('area')}>
                     <option value="Urbana">Urbana</option>
                     <option value="Rural">Rural</option>
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Língua de Origem */}
               <Grid item xs={12} sm={3}>
-                <FormControl variant="filled">
-                  <InputLabel value={linguaOrigem} htmlFor="filled-age-native-simple">
-                    Língua de Origem
-                  </InputLabel>
-                  <Select required native onChange={(e) => setLinguaOrigem(e.target.value)}>
-                    <option selected disabled></option>
-                    {selectLingua.map((item) => (
-                      <option value={item.name}>{item.name}</option>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Língua de Origem</InputLabel>
+                  <Select
+                    native
+                    value={formData.linguaOrigem}
+                    onChange={handleChange('linguaOrigem')}
+                  >
+                    <option disabled value=""></option>
+                    {options.linguas.map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Taxonomia */}
               <Grid item xs={12} sm={3}>
-                <FormControl variant="filled">
-                  <InputLabel value={taxionomia} htmlFor="filled-age-native-simple">
-                    Taxonomia
-                  </InputLabel>
-                  <Select required native onChange={(e) => setTaxionomia(e.target.value)}>
-                    <option selected disabled></option>
-                    {selectTaxonomia.map((item) => (
-                      <option value={item.name}>{item.name}</option>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Taxonomia</InputLabel>
+                  <Select native value={formData.taxionomia} onChange={handleChange('taxionomia')}>
+                    <option disabled value=""></option>
+                    {options.taxonomias.map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Estrutura Morfológica */}
               <Grid item xs={12} sm={3}>
-                <FormControl variant="filled">
-                  <InputLabel value={estruturaMorfologica} htmlFor="filled-age-native-simple">
-                    Estrutura Morfologica
-                  </InputLabel>
-                  <Select required native onChange={(e) => setEstruturaMorfologica(e.target.value)}>
-                    <option selected disabled></option>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Estrutura Morfológica</InputLabel>
+                  <Select
+                    native
+                    value={formData.estruturaMorfologica}
+                    onChange={handleChange('estruturaMorfologica')}
+                  >
+                    <option disabled value=""></option>
                     <option value="Simples">Simples</option>
                     <option value="Composto">Composto</option>
                     <option value="Simples híbrido">Simples híbrido</option>
@@ -357,117 +321,109 @@ export default function NovoAtlasToponimico() {
                   </Select>
                 </FormControl>
               </Grid>
+
+              {/* Etimologia */}
               <Grid item xs={12} sm={3}>
-                <FormControl variant="filled">
-                  <InputLabel value={etimologia} htmlFor="filled-age-native-simple">
-                    Etimologia
-                  </InputLabel>
-                  <Select required native onChange={(e) => setEtimologia(e.target.value)}>
-                    <option selected disabled></option>
-                    {selectEtimologia.map((item) => (
-                      <option value={item.name}>{item.name}</option>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Etimologia</InputLabel>
+                  <Select native value={formData.etimologia} onChange={handleChange('etimologia')}>
+                    <option disabled value=""></option>
+                    {options.etimologias.map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={12}>
+
+              {/* Campos de texto adicionais */}
+              <Grid item xs={12}>
                 <TextField
-                  id="esc"
-                  name="esc"
-                  label="Etimologia"
-                  variant="outlined"
                   fullWidth
-                  value={etimologiaEsc}
-                  onChange={(e) => setEtimologiaEsc(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  id="referencias"
-                  name="referencias"
-                  label="Referências"
+                  label="Etimologia detalhada"
                   variant="outlined"
-                  fullWidth
-                  value={referencias}
-                  onChange={(e) => setReferencias(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  id="fonte"
-                  name="fonte"
-                  label="Fonte (dados do mapa)"
-                  variant="outlined"
-                  fullWidth
-                  value={fonte}
-                  onChange={(e) => setFonte(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  id="date"
-                  label="Data da coleta"
-                  type="date"
-                  variant="outlined"
-                  value={dataColeta}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  onChange={(e) => setDataColeta(e.target.value)}
+                  value={formData.etimologiaEsc}
+                  onChange={handleChange('etimologiaEsc')}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  id="Responsável"
-                  name="Responsável"
+                  fullWidth
+                  label="Referências"
+                  variant="outlined"
+                  value={formData.referencias}
+                  onChange={handleChange('referencias')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Fonte (dados do mapa)"
+                  variant="outlined"
+                  value={formData.fonte}
+                  onChange={handleChange('fonte')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  type="date"
+                  label="Data da coleta"
+                  variant="outlined"
+                  InputLabelProps={{ shrink: true }}
+                  value={formData.dataColeta}
+                  onChange={handleChange('dataColeta')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
                   label="Responsável pela coleta"
                   variant="outlined"
-                  fullWidth
-                  value={responsavel}
-                  onChange={(e) => setResponsavel(e.target.value)}
+                  value={formData.responsavel}
+                  onChange={handleChange('responsavel')}
                 />
               </Grid>
-              <Grid item xs={12} sm={5}>
+              <Grid item xs={12} sm={4}>
                 <TextField
-                  id="revisor"
-                  name="revisor"
+                  fullWidth
                   label="Revisor"
                   variant="outlined"
-                  fullWidth
-                  value={revisor}
-                  onChange={(e) => setRevisor(e.target.value)}
+                  value={formData.revisor}
+                  onChange={handleChange('revisor')}
                 />
               </Grid>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12}>
                 <TextField
-                  id="obs"
-                  name="obs"
+                  fullWidth
                   label="Observações"
                   variant="outlined"
-                  fullWidth
-                  value={observacoes}
-                  onChange={(e) => setObservacoes(e.target.value)}
+                  value={formData.observacoes}
+                  onChange={handleChange('observacoes')}
                 />
               </Grid>
-              <Grid item xs={6} sm={6}>
+
+              {/* Botões */}
+              <Grid item xs={12} sm={6}>
                 <Button
-                  size="large"
                   fullWidth
                   variant="contained"
                   color="secondary"
+                  size="large"
                   startIcon={<Clear />}
-                  onClick={resetData}
+                  onClick={resetForm}
                 >
                   LIMPAR
                 </Button>
               </Grid>
-              <Grid item xs={6} sm={6}>
+              <Grid item xs={12} sm={6}>
                 <LoadingButton
-                  onClick={submitData}
                   fullWidth
-                  size="large"
                   variant="contained"
+                  size="large"
                   loading={loading}
+                  onClick={submitData}
                 >
                   GRAVAR
                 </LoadingButton>

@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useSelector } from 'react-redux';
 import Page from '../components/Page';
 
 import apiAtema from '../services/apiAtema';
@@ -30,10 +29,6 @@ export default function Posts() {
   const [content, setContent] = useState('');
   const [aux, setAux] = useState(0);
 
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
-  };
-
   const onChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -41,30 +36,26 @@ export default function Posts() {
   async function handlePost() {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await apiAtema.post('files', formData, config);
+    const response = await apiAtema.post('files', formData);
     if (!response.data.url) {
       return alert('Erro ao fazer upload da imagem!');
     }
     if (!title || !content) {
       return alert('Informe o titulo e conteudo!');
     }
-    await apiAtema.post(
-      'post',
-      {
-        title: title,
-        image: response.data.url,
-        content: content,
-        author: sessionStorage.getItem('@atema#username')
-      },
-      config
-    );
+    await apiAtema.post('post', {
+      title: title,
+      image: response.data.url,
+      content: content,
+      author: sessionStorage.getItem('@atema#username')
+    });
     setAux(Math.random);
   }
   async function deletePost(id) {
     const r = window.confirm(`Confirma a EXCLUSÃO?`);
     if (r === true) {
       try {
-        await apiAtema.delete(`post/${id}`, config);
+        await apiAtema.delete(`post/${id}`);
         setAux(Math.random);
       } catch (error) {
         alert('Erro ao deletar!! tente novamente...');
@@ -85,7 +76,7 @@ export default function Posts() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get('post', config);
+      const response = await apiAtema.get('post');
       setPost(response.data);
     }
     fetchData();
