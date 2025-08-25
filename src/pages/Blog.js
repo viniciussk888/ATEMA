@@ -16,7 +16,7 @@ export default function Blog() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get('post');
+      const response = await apiAtema.get('posts');
       setPost(response.data);
     }
     fetchData();

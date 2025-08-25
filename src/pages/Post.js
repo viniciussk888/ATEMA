@@ -31,7 +31,7 @@ export default function Post() {
     const getPost = async () => {
       try {
         const postId = params.id;
-        const response = await apiAtema.get(`post/${postId}`);
+        const response = await apiAtema.get(`posts/${postId}`);
         setPost(response.data);
       } catch (error) {
         console.log(error);

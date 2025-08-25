@@ -12,14 +12,15 @@ import {
   CardContent,
   CardMedia,
   Hidden,
-  Button,
-  TextareaAutosize
+  Button
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Page from '../components/Page';
+import Editor from 'react-simple-wysiwyg';
 
 import apiAtema from '../services/apiAtema';
+import { toast } from 'react-toastify';
 
 export default function Posts() {
   const navigate = useNavigate();
@@ -29,33 +30,40 @@ export default function Posts() {
   const [content, setContent] = useState('');
   const [aux, setAux] = useState(0);
 
+  function onChangeContent(e) {
+    setContent(e.target.value);
+  }
+
   const onChange = (e) => {
     setFile(e.target.files[0]);
   };
 
   async function handlePost() {
+    if (!title || !content || !file) {
+      return toast.error('Preencha todos os campos!');
+    }
     const formData = new FormData();
-    formData.append('file', file);
-    const response = await apiAtema.post('files', formData);
-    if (!response.data.url) {
-      return alert('Erro ao fazer upload da imagem!');
-    }
-    if (!title || !content) {
-      return alert('Informe o titulo e conteudo!');
-    }
-    await apiAtema.post('post', {
-      title: title,
-      image: response.data.url,
-      content: content,
+    formData.append('image', file);
+    const response = await apiAtema.post('posts/file', formData);
+    const imageUrl = response.data.image;
+
+    await apiAtema.post('posts', {
+      title,
+      content,
+      image: imageUrl,
       author: sessionStorage.getItem('@atema#username')
     });
+    toast.success('Postagem realizada com sucesso!');
+    setTitle('');
+    setContent('');
+    setFile('');
     setAux(Math.random);
   }
   async function deletePost(id) {
     const r = window.confirm(`Confirma a EXCLUSÃO?`);
     if (r === true) {
       try {
-        await apiAtema.delete(`post/${id}`);
+        await apiAtema.delete(`posts/${id}`);
         setAux(Math.random);
       } catch (error) {
         alert('Erro ao deletar!! tente novamente...');
@@ -69,14 +77,14 @@ export default function Posts() {
     const admin = sessionStorage.getItem('@atema#admin');
     const blog = sessionStorage.getItem('@atema#blog');
     if (admin === false && blog === false) {
-      alert('Sem permissão para a operação!');
+      toast.error('Operação permitida apenas para ADMINISTRADORES ou USUÁRIOS DE BLOG!');
       navigate('/', { replace: true });
     }
   }, [navigate]);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get('post');
+      const response = await apiAtema.get('posts');
       setPost(response.data);
     }
     fetchData();
@@ -118,11 +126,10 @@ export default function Posts() {
 
               <Grid item xs={12} sm={12}>
                 <div class="form-group">
-                  <TextareaAutosize
-                    style={{ minWidth: '100%', minHeight: 120 }}
-                    fullWidth
-                    placeholder="Texto"
-                    onChange={(e) => setContent(e.target.value)}
+                  <Editor
+                    containerProps={{ style: { resize: 'vertical', height: 220 } }}
+                    value={content}
+                    onChange={onChangeContent}
                   />
                 </div>
               </Grid>
