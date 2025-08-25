@@ -1,5 +1,5 @@
 // material
-import { Box, Grid, Container, Typography } from '@material-ui/core';
+import { Box, Grid, Container, Typography, Skeleton } from '@material-ui/core';
 // components
 import Page from '../components/Page';
 import {
@@ -8,10 +8,27 @@ import {
   AppWeeklySales,
   AppWebsiteVisits
 } from '../components/_dashboard/app';
+import apiAtema from 'src/services/apiAtema';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const fetchData = async () => {
+    try {
+      const response = await apiAtema.get('dashboard');
+      setData(response.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Page title="Dashboard | ATEMA">
       <Container maxWidth="xl">
@@ -20,17 +37,33 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4} md={4}>
-            <AppWeeklySales />
+            {loading ? (
+              <Skeleton variant="rectangular" height={150} />
+            ) : (
+              <AppWeeklySales toponimos={data?.toponimos} />
+            )}
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
-            <AppNewUsers />
+            {loading ? (
+              <Skeleton variant="rectangular" height={150} />
+            ) : (
+              <AppNewUsers municipios={data?.municipios} />
+            )}
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
-            <AppBugReports />
+            {loading ? (
+              <Skeleton variant="rectangular" height={150} />
+            ) : (
+              <AppBugReports elementogeograficos={data?.elementogeograficos} />
+            )}
           </Grid>
 
           <Grid item xs={12} md={12} lg={12}>
-            <AppWebsiteVisits />
+            {loading ? (
+              <Skeleton variant="rectangular" height={364} />
+            ) : (
+              <AppWebsiteVisits topMunicipios={data?.topMunicipios} />
+            )}
           </Grid>
         </Grid>
       </Container>

@@ -15,14 +15,12 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 234;
-
-export default function AppBugReports() {
+export default function AppBugReports({ elementogeograficos }) {
   return (
     <RootStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{elementogeograficos}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        Línguas de origem
+        Elementos Geográficos
       </Typography>
     </RootStyle>
   );

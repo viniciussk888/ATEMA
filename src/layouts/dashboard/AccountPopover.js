@@ -38,8 +38,8 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const anchorRef = useRef(null);
-  const username = localStorage.getItem('@atema#username');
-  const email = localStorage.getItem('@atema#email');
+  const username = sessionStorage.getItem('@atema#username');
+  const email = sessionStorage.getItem('@atema#email');
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -52,7 +52,7 @@ export default function AccountPopover() {
   const handleLogout = () => {
     try {
       dispatch({ type: 'LOG_OUT' });
-      localStorage.clear();
+      sessionStorage.clear();
       navigate('/blog', { replace: true });
     } catch (error) {
       alert(error);

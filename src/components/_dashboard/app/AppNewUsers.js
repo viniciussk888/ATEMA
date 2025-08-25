@@ -15,12 +15,10 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 131;
-
-export default function AppNewUsers() {
+export default function AppNewUsers({ municipios }) {
   return (
     <RootStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{municipios}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Municipios
       </Typography>

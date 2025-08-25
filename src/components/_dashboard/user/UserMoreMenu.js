@@ -57,8 +57,8 @@ export default function UserMoreMenu({ atemaId }) {
   };
 
   async function deleteData() {
-    const update = localStorage.getItem('@atema#update');
-    const admin = localStorage.getItem('@atema#admin');
+    const update = sessionStorage.getItem('@atema#update');
+    const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0 && update === 0) {
       alert('Sem permissão para a operação!');
       return;

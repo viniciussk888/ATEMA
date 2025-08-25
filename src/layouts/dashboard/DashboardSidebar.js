@@ -39,7 +39,7 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  const username = localStorage.getItem('@atema#username')
+  const username = sessionStorage.getItem('@atema#username');
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -54,16 +54,15 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         '& .simplebar-content': { height: '100%', display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box sx={{ px: 2.5, py: 3 }}>
-      </Box>
+      <Box sx={{ px: 2.5, py: 3 }}></Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src='/static/icons/user.png' alt="photoURL" />
+            <Avatar src="/static/icons/user.png" alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {username||"Error"}
+                {username || 'Error'}
               </Typography>
             </Box>
           </AccountStyle>

@@ -15,12 +15,10 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 840;
-
-export default function AppWeeklySales() {
+export default function AppWeeklySales({ toponimos }) {
   return (
     <RootStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{toponimos}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Topônimos
       </Typography>

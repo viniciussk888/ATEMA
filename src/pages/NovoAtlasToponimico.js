@@ -94,8 +94,8 @@ export default function NovoAtlasToponimico() {
   }, []);
 
   useEffect(() => {
-    const insert = localStorage.getItem('@atema#insert');
-    const admin = localStorage.getItem('@atema#admin');
+    const insert = sessionStorage.getItem('@atema#insert');
+    const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0 && insert === 0) {
       alert('Sem permissão para a operação!');
       navigate('atlas', { replace: true });

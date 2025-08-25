@@ -21,7 +21,6 @@ import {
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { useSelector } from 'react-redux';
 import Page from '../components/Page';
 import apiAtema from '../services/apiAtema';
 import { LoadingButton } from '@material-ui/lab';
@@ -32,12 +31,9 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const config = {
-    headers: { Authorization: `Bearer ${useSelector((state) => state.token)}` }
-  };
 
   const [state, setState] = React.useState({
     insert: false,
@@ -51,7 +47,7 @@ export default function Users() {
     const r = window.confirm(`Confirma a EXCLUSÃO de ${username} ?`);
     if (r === true) {
       try {
-        await apiAtema.delete(`users/${id}`, config);
+        await apiAtema.delete(`user/${id}`);
         window.location.reload();
       } catch (error) {
         alert('Erro ao deletar usúario!! ' + error);
@@ -61,7 +57,7 @@ export default function Users() {
     }
   }
   useEffect(() => {
-    const admin = localStorage.getItem('@atema#admin');
+    const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0) {
       alert('Operação permitida apenas para ADMINISTRADORES!');
       navigate('/', { replace: true });
@@ -70,8 +66,7 @@ export default function Users() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get(`users`, config);
-      console.warn(response.data);
+      const response = await apiAtema.get(`user`);
       setUsers(response.data);
     }
     fetchData();
@@ -82,25 +77,25 @@ export default function Users() {
   };
 
   async function createUser() {
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !repeatPassword) {
       alert('Preencha todos os campos!');
+      return;
+    }
+    if (password !== repeatPassword) {
+      alert('As senhas não coincidem!');
       return;
     }
     setLoading(true);
     try {
-      const response = await apiAtema.post(
-        'users',
-        {
-          username: username,
-          password: password,
-          email: email,
-          insert: state.insert,
-          update: state.update,
-          blog: state.blog,
-          admin: state.admin
-        },
-        config
-      );
+      const response = await apiAtema.post('user', {
+        username: username,
+        password: password,
+        email: email,
+        insert: state.insert,
+        update: state.update,
+        blog: state.blog,
+        admin: state.admin
+      });
       if (response.data) {
         alert('Cadastro Efetuado!!');
         setLoading(false);
@@ -126,7 +121,7 @@ export default function Users() {
                 Criar novo usuário
               </Typography>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     id="name"
@@ -137,18 +132,7 @@ export default function Users() {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    required
-                    id="password"
-                    type="password"
-                    label="Senha"
-                    variant="outlined"
-                    onChange={(e) => setPassword(e.target.value)}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     required
                     id="email"
@@ -159,9 +143,31 @@ export default function Users() {
                     fullWidth
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="password"
+                    type="password"
+                    label="Senha"
+                    variant="outlined"
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="repeatPassword"
+                    type="password"
+                    label="Repetir a senha"
+                    variant="outlined"
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
               </Grid>
-              <Typography variant="h6" gutterBottom>
-                Permissões
+              <Typography variant="h6" gutterBottom style={{ marginTop: 20 }}>
+                Permissões do usuário
               </Typography>
               <Grid item xs={12} sm={12}>
                 <FormGroup row>
@@ -174,7 +180,7 @@ export default function Users() {
                         name="insert"
                       />
                     }
-                    label="Criar"
+                    label="Criar dados"
                   />
                   <FormControlLabel
                     control={
@@ -185,7 +191,7 @@ export default function Users() {
                         color="primary"
                       />
                     }
-                    label="Alterar"
+                    label="Alterar dados"
                   />
                   <FormControlLabel
                     control={
@@ -196,7 +202,7 @@ export default function Users() {
                         name="blog"
                       />
                     }
-                    label="Blog"
+                    label="Fazer posts no Blog"
                   />
                   <FormControlLabel
                     control={
@@ -207,7 +213,7 @@ export default function Users() {
                         name="admin"
                       />
                     }
-                    label="Admin"
+                    label="Admin (Permite todas as ações)"
                   />
                 </FormGroup>
                 <LoadingButton

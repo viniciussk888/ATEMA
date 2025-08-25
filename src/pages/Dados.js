@@ -31,7 +31,7 @@ export default function Dados() {
   };
 
   useEffect(() => {
-    const admin = localStorage.getItem('@atema#admin');
+    const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0) {
       alert('Operação permitida apenas para ADMINISTRADORES!');
       navigate('/', { replace: true });

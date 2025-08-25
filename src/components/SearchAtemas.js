@@ -36,7 +36,7 @@ export default function SearchAtemas({ setAtemasInfo }) {
       let meso = aux[1];
       let aux2 = microrregiao.split('-');
       let micro = aux2[1];
-      const response = await apiAtema.post('filter', {
+      const response = await apiAtema.post('atema/filter', {
         mesorregiao: meso,
         microrregiao: micro,
         municipio: municipio
@@ -152,24 +152,24 @@ export default function SearchAtemas({ setAtemasInfo }) {
               </FormControl>
             </Grid>
             <Grid item xs={6} sm={4}>
-              <LoadingButton
+              {/* <LoadingButton
                 onClick={filter}
                 size="large"
                 variant="contained"
                 loading={isSubmitting}
               >
                 BUSCAR
-              </LoadingButton>
+              </LoadingButton> */}
             </Grid>
             <Grid item xs={6} sm={2}>
               <LoadingButton
-                onClick={seeAll}
+                onClick={filter}
                 fullWidth
                 size="large"
                 variant="contained"
                 loading={isSubmittingAll}
               >
-                BUSCAR TODOS
+                BUSCAR
               </LoadingButton>
             </Grid>
           </Grid>

@@ -6,19 +6,11 @@ import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // material
-import {
-  Link,
-  Stack,
-  Checkbox,
-  TextField,
-  IconButton,
-  InputAdornment,
-  FormControlLabel
-} from '@material-ui/core';
+import { Link, Stack, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import { useDispatch } from 'react-redux';
 //API
-import apiAtema from "../../../services/apiAtema";
+import apiAtema from '../../../services/apiAtema';
 
 // ----------------------------------------------------------------------
 
@@ -41,26 +33,27 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
       try {
-        const response = await apiAtema.post('sessions', {
-          email:values.email,
-          password:values.password
-        })
-        dispatch({ type: 'LOG_IN', usuarioEmail: values.email, token: response.data[0].token });
-        localStorage.setItem('@atema#username', response.data[1].username)
-        localStorage.setItem('@atema#email', values.email)
-        localStorage.setItem('@atema#admin', response.data[1].admin);
-        localStorage.setItem('@atema#insert', response.data[1].insert);
-        localStorage.setItem('@atema#update', response.data[1].update);
-        localStorage.setItem('@atema#delete', response.data[1].delete);
-        localStorage.setItem('@atema#blog', response.data[1].blog);
+        const response = await apiAtema.post('session', {
+          email: values.email,
+          password: values.password
+        });
+        dispatch({ type: 'LOG_IN', usuarioEmail: values.email, token: response.data.accessToken });
+        sessionStorage.setItem('@atema#token', response.data.accessToken);
+        sessionStorage.setItem('@atema#username', response.data.user.username);
+        sessionStorage.setItem('@atema#email', values.email);
+        sessionStorage.setItem('@atema#admin', response.data.user.admin);
+        sessionStorage.setItem('@atema#insert', response.data.user.insert);
+        sessionStorage.setItem('@atema#update', response.data.user.update);
+        sessionStorage.setItem('@atema#delete', response.data.user.delete);
+        sessionStorage.setItem('@atema#blog', response.data.user.blog);
         navigate('/dashboard', { replace: true });
       } catch (err) {
-        alert("Falha no login, tente novamente. ", err)
+        alert('Falha no login, tente novamente. ', err);
       }
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, isSubmitting, handleSubmit, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -101,11 +94,6 @@ export default function LoginForm() {
         </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Lembrar dados"
-          />
-
           <Link component={RouterLink} variant="subtitle2" to="#">
             Esqueceu sua senha?
           </Link>

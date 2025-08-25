@@ -63,7 +63,7 @@ function applySortFilter(array, comparator, query) {
   if (query) {
     return filter(
       array,
-      (_user) => _user.municipio.toLowerCase().indexOf(query.toLowerCase()) !== -1
+      (_user) => _user.toponimo.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
   return stabilizedThis.map((el) => el[0]);
@@ -78,7 +78,6 @@ export default function AtlasToponimico() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const setAtemasInformations = (data) => {
-    console.log(data);
     setAtemas(data);
   };
 

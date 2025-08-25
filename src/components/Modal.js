@@ -6,7 +6,7 @@ import apiAtema from '../services/apiAtema';
 import { useSelector } from 'react-redux';
 
 export default function ModalAtema(props) {
-  const id = localStorage.getItem('atemaUpdate');
+  const id = sessionStorage.getItem('atemaUpdate');
   const [data, setData] = useState([]);
 
   const config = {

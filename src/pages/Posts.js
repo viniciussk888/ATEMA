@@ -54,7 +54,7 @@ export default function Posts() {
         title: title,
         image: response.data.url,
         content: content,
-        author: localStorage.getItem('@atema#username')
+        author: sessionStorage.getItem('@atema#username')
       },
       config
     );
@@ -75,8 +75,8 @@ export default function Posts() {
   }
 
   useEffect(() => {
-    const admin = localStorage.getItem('@atema#admin');
-    const blog = localStorage.getItem('@atema#blog');
+    const admin = sessionStorage.getItem('@atema#admin');
+    const blog = sessionStorage.getItem('@atema#blog');
     if (admin === false && blog === false) {
       alert('Sem permissão para a operação!');
       navigate('/', { replace: true });
