@@ -8,7 +8,14 @@ import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 import Table from 'react-bootstrap/Table';
 // material
-import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Menu,
+  MenuItem,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Skeleton
+} from '@material-ui/core';
 import apiAtema from '../../../services/apiAtema';
 import { toast } from 'react-toastify';
 
@@ -34,11 +41,17 @@ export default function UserMoreMenu({ atemaId, setAtemas }) {
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   async function getData() {
     if (data.length === 0) {
-      const response = await apiAtema.get(`atema/${atemaId}`);
-      setData(response.data);
+      try {
+        setLoading(true);
+        const response = await apiAtema.get(`atema/${atemaId}`);
+        setData(response.data);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -82,77 +95,93 @@ export default function UserMoreMenu({ atemaId, setAtemas }) {
         onClose={handleClose}
         closeAfterTransition
       >
-        <Fade in={open}>
+        {loading ? (
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Informações Toponímicas</h2>
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Mesorregião</th>
-                  <th>Microrregião</th>
-                  <th>Município</th>
-                  <th>Elemento Geográfico</th>
-                  <th>Topônimo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{data.mesorregiao}</td>
-                  <td>{data.microrregiao}</td>
-                  <td>{data.municipio}</td>
-                  <td>{data.elementogeografico}</td>
-                  <td>{data.toponimo}</td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr>
-                  <th>Tipo</th>
-                  <th>Área</th>
-                  <th>Língua de Origem</th>
-                  <th>Taxionomia</th>
-                  <th>Estrutura Morfológica</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{data.tipo}</td>
-                  <td>{data.area}</td>
-                  <td>{data.linguaOrigem}</td>
-                  <td>{data.taxionomia}</td>
-                  <td>{data.estruturaMorfologica}</td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr>
-                  <th>Referências</th>
-                  <th>Fonte (dados do mapa)</th>
-                  <th>Data da coleta</th>
-                  <th>Responsavel pela coleta</th>
-                  <th>Revisor</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{data.referencias}</td>
-                  <td>{data.fonte}</td>
-                  <td>{data.dataColeta}</td>
-                  <td>{data.responsavel}</td>
-                  <td>{data.revisor}</td>
-                </tr>
-              </tbody>
-            </Table>
-            <div>
-              <strong>Variante</strong>
-              <p>{data.variante}</p>
-              <strong>Etimologia</strong>
-              <p>{data.etimologia}</p>
-              <strong>Etimologia</strong>
-              <p>{data.etimologiaEsc}</p>
-              <strong>Observações</strong>
-              <p>{data.observacoes}</p>
-            </div>
+            <br />
+            <Skeleton variant="text" width={800} height={50} />
+            <br />
+            <Skeleton variant="text" width={800} height={50} />
+            <br />
+            <Skeleton variant="text" width={800} height={50} />
+            <br />
+            <Skeleton variant="text" width={800} height={50} />
+            <br />
+            <Skeleton variant="text" width={800} height={50} />
+            <br />
           </div>
-        </Fade>
+        ) : (
+          <Fade in={open}>
+            <div className={classes.paper}>
+              <h2 id="transition-modal-title">Informações Toponímicas</h2>
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>Mesorregião</th>
+                    <th>Microrregião</th>
+                    <th>Município</th>
+                    <th>Elemento Geográfico</th>
+                    <th>Topônimo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{data.mesorregiao}</td>
+                    <td>{data.microrregiao}</td>
+                    <td>{data.municipio}</td>
+                    <td>{data.elementogeografico}</td>
+                    <td>{data.toponimo}</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Área</th>
+                    <th>Língua de Origem</th>
+                    <th>Taxionomia</th>
+                    <th>Estrutura Morfológica</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{data.tipo}</td>
+                    <td>{data.area}</td>
+                    <td>{data.linguaOrigem}</td>
+                    <td>{data.taxionomia}</td>
+                    <td>{data.estruturaMorfologica}</td>
+                  </tr>
+                </tbody>
+                <thead>
+                  <tr>
+                    <th>Referências</th>
+                    <th>Fonte (dados do mapa)</th>
+                    <th>Data da coleta</th>
+                    <th>Responsavel pela coleta</th>
+                    <th>Revisor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{data.referencias}</td>
+                    <td>{data.fonte}</td>
+                    <td>{data.dataColeta}</td>
+                    <td>{data.responsavel}</td>
+                    <td>{data.revisor}</td>
+                  </tr>
+                </tbody>
+              </Table>
+              <div>
+                <strong>Variante</strong>
+                <p>{data.variante}</p>
+                <strong>Etimologia</strong>
+                <p>{data.etimologia}</p>
+                <strong>Etimologia</strong>
+                <p>{data.etimologiaEsc}</p>
+                <strong>Observações</strong>
+                <p>{data.observacoes}</p>
+              </div>
+            </div>
+          </Fade>
+        )}
       </Modal>
 
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>

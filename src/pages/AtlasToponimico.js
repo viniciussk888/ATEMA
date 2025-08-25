@@ -28,9 +28,10 @@ import SearchAtemas from '../components/SearchAtemas';
 
 const TABLE_HEAD = [
   { id: 'Município', label: 'Município', alignRight: false },
-  { id: 'Mesorregião', label: 'Mesorregião', alignRight: false },
-  { id: 'Microrregião', label: 'Microrregião', alignRight: false },
   { id: 'Topônimo', label: 'Topônimo', alignRight: false },
+  { id: 'Elemento Geográfico', label: 'Elemento Geográfico', alignRight: false },
+  { id: 'Área', label: 'Área', alignRight: false },
+  { id: 'Taxionomia', label: 'Taxionomia', alignRight: false },
   { id: 'Língua de Origem', label: 'Língua de Origem', alignRight: false },
   { id: 'Ação', label: 'Ação', alignRight: true }
 ];
@@ -144,8 +145,15 @@ export default function AtlasToponimico() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, mesorregiao, municipio, toponimo, microrregiao, linguaOrigem } =
-                        row;
+                      const {
+                        id,
+                        area,
+                        municipio,
+                        toponimo,
+                        taxionomia,
+                        linguaOrigem,
+                        elementogeografico
+                      } = row;
 
                       return (
                         <TableRow hover key={id} tabIndex={-1} role="checkbox">
@@ -157,11 +165,11 @@ export default function AtlasToponimico() {
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{mesorregiao}</TableCell>
-                          <TableCell align="left">{microrregiao}</TableCell>
                           <TableCell align="left">{toponimo}</TableCell>
+                          <TableCell align="left">{elementogeografico}</TableCell>
+                          <TableCell align="left">{area}</TableCell>
+                          <TableCell align="left">{taxionomia}</TableCell>
                           <TableCell align="left">{linguaOrigem}</TableCell>
-
                           <TableCell align="right">
                             <UserMoreMenu atemaId={id} setAtemas={setAtemas} />
                           </TableCell>

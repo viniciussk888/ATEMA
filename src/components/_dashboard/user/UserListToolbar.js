@@ -15,7 +15,7 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
 }));
 
 const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
-  width: 240,
+  width: 340,
   transition: theme.transitions.create(['box-shadow', 'width'], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter
@@ -41,7 +41,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
       <SearchStyle
         value={filterName}
         onChange={onFilterName}
-        placeholder="Filtrar pelo topônimo..."
+        placeholder="Digite o nome do topônimo..."
         startAdornment={
           <InputAdornment position="start">
             <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />
