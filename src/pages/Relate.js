@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function EcommerceShop() {
+export default function RelatePage() {
   const classes = useStyles();
   const [value, setValue] = React.useState('');
   const [tableName, setTableName] = useState('');
@@ -54,11 +54,10 @@ export default function EcommerceShop() {
     const response = await apiAtema.post('relate', {
       tableName: value
     });
-    console.warn(response.data.rows);
-    setResult(response.data.rows);
+    setResult(response.data);
     setTableName(value);
     setAux(true);
-    formalize(response.data.rows);
+    formalize(response.data);
   }
 
   function formalize(data) {

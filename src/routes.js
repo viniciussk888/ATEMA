@@ -6,7 +6,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import Login from './pages/Login';
 import Dados from './pages/Dados';
 import DashboardApp from './pages/DashboardApp';
-import Products from './pages/Products';
+import Relate from './pages/Relate';
 import Blog from './pages/Blog';
 import AtlasToponimico from './pages/AtlasToponimico';
 import NovoAtlasToponimico from './pages/NovoAtlasToponimico';
@@ -27,7 +27,7 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'atlas', element: <AtlasToponimico /> },
         { path: 'atlas/novo', element: <NovoAtlasToponimico /> },
-        { path: 'products', element: <Products /> },
+        { path: 'relate', element: <Relate /> },
         { path: 'users', element: <Users /> },
         { path: 'dados', element: <Dados /> },
         { path: 'posts', element: <Posts /> }
