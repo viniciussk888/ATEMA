@@ -8,6 +8,7 @@ Este projeto foi desenvolvido para o ATEMA - Atlas Toponímico do Estado do Mara
   
 # SISTEMA
   O Sistema funciona como um sistema web, que fornece uma area logada para que os participantes do projeto ATEMA possam gravar e gerenciar os dados toponímicos coletados durante suas pesquisas. O sistema tem as seguintes funcionalidades:
+  
   - Login.
   - Dashboard.
   - CRUD de informaçoes toponímicas.
