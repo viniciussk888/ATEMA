@@ -38,21 +38,21 @@ export default function DashboardApp() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4} md={4}>
             {loading ? (
-              <Skeleton variant="rectangular" height={150} />
+              <Skeleton variant="text" height={150} />
             ) : (
               <AppWeeklySales toponimos={data?.toponimos} />
             )}
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
             {loading ? (
-              <Skeleton variant="rectangular" height={150} />
+              <Skeleton variant="text" height={150} />
             ) : (
               <AppNewUsers municipios={data?.municipios} />
             )}
           </Grid>
           <Grid item xs={12} sm={4} md={4}>
             {loading ? (
-              <Skeleton variant="rectangular" height={150} />
+              <Skeleton variant="text" height={150} />
             ) : (
               <AppBugReports elementogeograficos={data?.elementogeograficos} />
             )}
