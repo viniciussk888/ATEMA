@@ -1,0 +1,285 @@
+import React, { useState, useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+import {
+  Table,
+  Container,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  TableContainer,
+  IconButton,
+  Card,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
+} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import Page from '../components/Page';
+import apiAtema from '../services/apiAtema';
+import { LoadingButton } from '@material-ui/lab';
+// ----------------------------------------------------------------------
+
+export default function Users() {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [state, setState] = React.useState({
+    insert: false,
+    update: false,
+    delete: false,
+    blog: false,
+    admin: false
+  });
+
+  async function deleteUser(id, username) {
+    const r = window.confirm(`Confirma a EXCLUSÃO de ${username} ?`);
+    if (r === true) {
+      try {
+        await apiAtema.delete(`user/${id}`);
+        window.location.reload();
+      } catch (error) {
+        alert('Erro ao deletar usúario!! ' + error);
+      }
+    } else {
+      return;
+    }
+  }
+  useEffect(() => {
+    const admin = sessionStorage.getItem('@atema#admin');
+    if (admin === 0) {
+      alert('Operação permitida apenas para ADMINISTRADORES!');
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await apiAtema.get(`user`);
+      setUsers(response.data);
+    }
+    fetchData();
+  }, []);
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  async function createUser() {
+    if (!username || !email || !password || !repeatPassword) {
+      alert('Preencha todos os campos!');
+      return;
+    }
+    if (password !== repeatPassword) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await apiAtema.post('user', {
+        username: username,
+        password: password,
+        email: email,
+        insert: state.insert,
+        update: state.update,
+        blog: state.blog,
+        admin: state.admin
+      });
+      if (response.data) {
+        alert('Cadastro Efetuado!!');
+        setLoading(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      setLoading(false);
+      alert('ocorreu um erro! \n' + error);
+    }
+    setLoading(false);
+  }
+  return (
+    <Page title="Usuários | ATEMA">
+      <Container>
+        <Grid item xs={12}>
+          <Card>
+            <div
+              style={{
+                padding: 24
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Criar novo usuário
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="name"
+                    name="name"
+                    label="Nome de Usuário"
+                    variant="outlined"
+                    onChange={(e) => setUsername(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="email"
+                    name="email"
+                    label="Email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    variant="outlined"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="password"
+                    type="password"
+                    label="Senha"
+                    variant="outlined"
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    id="repeatPassword"
+                    type="password"
+                    label="Repetir a senha"
+                    variant="outlined"
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+              <Typography variant="h6" gutterBottom style={{ marginTop: 20 }}>
+                Permissões do usuário
+              </Typography>
+              <Grid item xs={12} sm={12}>
+                <FormGroup row>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={state.insert}
+                        onChange={handleChange}
+                        name="insert"
+                      />
+                    }
+                    label="Criar dados"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={state.update}
+                        onChange={handleChange}
+                        name="update"
+                        color="primary"
+                      />
+                    }
+                    label="Alterar dados"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={state.blog}
+                        onChange={handleChange}
+                        name="blog"
+                      />
+                    }
+                    label="Fazer posts no Blog"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={state.admin}
+                        onChange={handleChange}
+                        name="admin"
+                      />
+                    }
+                    label="Admin (Permite todas as ações)"
+                  />
+                </FormGroup>
+                <LoadingButton
+                  onClick={createUser}
+                  size="large"
+                  variant="contained"
+                  loading={loading}
+                >
+                  Criar
+                </LoadingButton>
+              </Grid>
+            </div>
+          </Card>
+        </Grid>
+        <br />
+        <Grid item xs={12}>
+          <Card>
+            <div
+              style={{
+                padding: 24
+              }}
+            >
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Nome</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">Administrador</TableCell>
+                      <TableCell align="center">Criar</TableCell>
+                      <TableCell align="center">Alterar</TableCell>
+                      <TableCell align="center">Blog</TableCell>
+                      <TableCell align="center">Ações</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell component="th" scope="row">
+                          {user.username}
+                        </TableCell>
+                        <TableCell align="center">{user.email}</TableCell>
+                        <TableCell align="center">
+                          <strong>{user.admin === true ? 'SIM' : 'NÃO'}</strong>
+                        </TableCell>
+                        <TableCell align="center">{user.insert === true ? 'SIM' : 'NÃO'}</TableCell>
+                        <TableCell align="center">{user.update === true ? 'SIM' : 'NÃO'}</TableCell>
+                        <TableCell align="center">{user.blog === true ? 'SIM' : 'NÃO'}</TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            onClick={() => deleteUser(user.id, user.username)}
+                            color="secondary"
+                            aria-label="Deletar"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          </Card>
+        </Grid>
+      </Container>
+    </Page>
+  );
+}
