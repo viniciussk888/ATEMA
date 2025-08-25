@@ -17,13 +17,15 @@ import {
   Card,
   FormGroup,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Skeleton
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import Page from '../components/Page';
 import apiAtema from '../services/apiAtema';
 import { LoadingButton } from '@material-ui/lab';
+import { toast } from 'react-toastify';
 // ----------------------------------------------------------------------
 
 export default function Users() {
@@ -34,6 +36,7 @@ export default function Users() {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   const [state, setState] = React.useState({
     insert: false,
@@ -48,9 +51,10 @@ export default function Users() {
     if (r === true) {
       try {
         await apiAtema.delete(`user/${id}`);
-        window.location.reload();
+        setUsers(users.filter((user) => user.id !== id));
+        toast.success('Usúario deletado com sucesso!! ');
       } catch (error) {
-        alert('Erro ao deletar usúario!! ' + error);
+        toast.error('Erro ao deletar usúario!! ');
       }
     } else {
       return;
@@ -59,15 +63,21 @@ export default function Users() {
   useEffect(() => {
     const admin = sessionStorage.getItem('@atema#admin');
     if (admin === 0) {
-      alert('Operação permitida apenas para ADMINISTRADORES!');
+      toast.error('Operação permitida apenas para ADMINISTRADORES!');
       navigate('/', { replace: true });
     }
   }, [navigate]);
 
   useEffect(() => {
     async function fetchData() {
-      const response = await apiAtema.get(`user`);
-      setUsers(response.data);
+      try {
+        const response = await apiAtema.get(`user`);
+        setUsers(response.data);
+      } catch {
+        toast.error('Erro ao carregar os usuários!');
+      } finally {
+        setIsFetching(false);
+      }
     }
     fetchData();
   }, []);
@@ -78,11 +88,11 @@ export default function Users() {
 
   async function createUser() {
     if (!username || !email || !password || !repeatPassword) {
-      alert('Preencha todos os campos!');
+      toast.error('Preencha todos os campos!');
       return;
     }
     if (password !== repeatPassword) {
-      alert('As senhas não coincidem!');
+      toast.error('As senhas não coincidem!');
       return;
     }
     setLoading(true);
@@ -97,13 +107,13 @@ export default function Users() {
         admin: state.admin
       });
       if (response.data) {
-        alert('Cadastro Efetuado!!');
+        toast.success('Cadastro Efetuado!!');
         setLoading(false);
         window.location.reload();
       }
     } catch (error) {
       setLoading(false);
-      alert('ocorreu um erro! \n' + error);
+      toast.error('ocorreu um erro!, tente novamente.');
     }
     setLoading(false);
   }
@@ -230,54 +240,62 @@ export default function Users() {
         </Grid>
         <br />
         <Grid item xs={12}>
-          <Card>
-            <div
-              style={{
-                padding: 24
-              }}
-            >
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Nome</TableCell>
-                      <TableCell align="center">Email</TableCell>
-                      <TableCell align="center">Administrador</TableCell>
-                      <TableCell align="center">Criar</TableCell>
-                      <TableCell align="center">Alterar</TableCell>
-                      <TableCell align="center">Blog</TableCell>
-                      <TableCell align="center">Ações</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell component="th" scope="row">
-                          {user.username}
-                        </TableCell>
-                        <TableCell align="center">{user.email}</TableCell>
-                        <TableCell align="center">
-                          <strong>{user.admin === true ? 'SIM' : 'NÃO'}</strong>
-                        </TableCell>
-                        <TableCell align="center">{user.insert === true ? 'SIM' : 'NÃO'}</TableCell>
-                        <TableCell align="center">{user.update === true ? 'SIM' : 'NÃO'}</TableCell>
-                        <TableCell align="center">{user.blog === true ? 'SIM' : 'NÃO'}</TableCell>
-                        <TableCell align="center">
-                          <IconButton
-                            onClick={() => deleteUser(user.id, user.username)}
-                            color="secondary"
-                            aria-label="Deletar"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
+          {isFetching ? (
+            <Skeleton variant="rectangular" width="100%" height={400} />
+          ) : (
+            <Card>
+              <div
+                style={{
+                  padding: 24
+                }}
+              >
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nome</TableCell>
+                        <TableCell align="center">Email</TableCell>
+                        <TableCell align="center">Administrador</TableCell>
+                        <TableCell align="center">Criar</TableCell>
+                        <TableCell align="center">Alterar</TableCell>
+                        <TableCell align="center">Blog</TableCell>
+                        <TableCell align="center">Ações</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          </Card>
+                    </TableHead>
+                    <TableBody>
+                      {users.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell component="th" scope="row">
+                            {user.username}
+                          </TableCell>
+                          <TableCell align="center">{user.email}</TableCell>
+                          <TableCell align="center">
+                            <strong>{user.admin === true ? 'SIM' : 'NÃO'}</strong>
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.insert === true ? 'SIM' : 'NÃO'}
+                          </TableCell>
+                          <TableCell align="center">
+                            {user.update === true ? 'SIM' : 'NÃO'}
+                          </TableCell>
+                          <TableCell align="center">{user.blog === true ? 'SIM' : 'NÃO'}</TableCell>
+                          <TableCell align="center">
+                            <IconButton
+                              onClick={() => deleteUser(user.id, user.username)}
+                              color="secondary"
+                              aria-label="Deletar"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </Card>
+          )}
         </Grid>
       </Container>
     </Page>

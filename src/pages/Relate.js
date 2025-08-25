@@ -23,6 +23,7 @@ import { makeStyles } from '@material-ui/styles';
 
 // ----------------------------------------------------------------------
 import apiAtema from '../services/apiAtema';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -49,7 +50,7 @@ export default function RelatePage() {
 
   async function relate() {
     if (!value) {
-      return alert('Selecione um campo!');
+      return toast.error('Selecione um campo para gerar o gráfico!');
     }
     const response = await apiAtema.post('relate', {
       tableName: value
@@ -97,8 +98,8 @@ export default function RelatePage() {
       <Container>
         <Grid item xs={12} className={classes.grid}>
           <Card style={{ padding: 24 }}>
-            <Typography variant="h7" gutterBottom>
-              Selecione o campo a gerar os dados
+            <Typography variant="h5" gutterBottom>
+              Gráfico totalizador geográfico
             </Typography>
             <Grid mt={1} container spacing={2}>
               <Grid item xs={6} sm={6}>
@@ -111,20 +112,13 @@ export default function RelatePage() {
                     onChange={handleChange}
                     label="Campo"
                   >
-                    <MenuItem value="">
-                      <em>Selecione</em>
-                    </MenuItem>
+                    <MenuItem value=""></MenuItem>
                     <MenuItem value="mesorregiao">Mesorregião</MenuItem>
                     <MenuItem value="microrregiao">Microrregião</MenuItem>
                     <MenuItem value="municipio">Município</MenuItem>
                     <MenuItem value="elementogeografico">Elemento Geografico</MenuItem>
-                    <MenuItem value="toponimo">Topônimo</MenuItem>
                     <MenuItem value="tipo">Tipo</MenuItem>
                     <MenuItem value="area">Area</MenuItem>
-                    <MenuItem value="linguaOrigem">Lingua de Origem</MenuItem>
-                    <MenuItem value="etimologia">Etimologia</MenuItem>
-                    <MenuItem value="taxionomia">Taxonomia</MenuItem>
-                    <MenuItem value="estruturaMorfologica">Estrutura Morfologica</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -149,13 +143,13 @@ export default function RelatePage() {
           <Grid item xs={12} className={classes.grid}>
             <Card style={{ padding: 24 }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6} style={{ maxHeight: 600, overflow: 'auto' }}>
                   <TableContainer component={Card}>
                     <Table className={classes.table} aria-label="simple table">
                       <TableHead>
                         <TableRow>
                           <TableCell>{tableName.toUpperCase() || 'Campo'}</TableCell>
-                          <TableCell align="right">TOTAL</TableCell>
+                          <TableCell align="right">TOTAL DE REGISTROS</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
