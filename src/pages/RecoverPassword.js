@@ -3,7 +3,7 @@ import { Card, Stack, Container, Typography } from '@material-ui/core';
 // components
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
-import { LoginForm } from '../components/authentication/login';
+import RecoverPasswordForm from '../components/authentication/RecoverPasswordForm';
 
 // ----------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function RecoverPassword() {
   return (
-    <RootStyle title="Login | ATEMA">
+    <RootStyle title="Recuperar Senha | ATEMA">
       <MHidden width="mdDown">
         <SectionStyle>
           <img
@@ -52,14 +52,15 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Entrar no sistema
+              Recuperar Senha
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              Entre com suas credenciais aqui.
+              Insira seu e-mail cadastrado para receber as instruções de recuperação de senha no seu
+              e-mail.
             </Typography>
           </Stack>
 
-          <LoginForm />
+          <RecoverPasswordForm />
         </ContentStyle>
       </Container>
     </RootStyle>

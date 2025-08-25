@@ -3,7 +3,7 @@ import { Card, Stack, Container, Typography } from '@material-ui/core';
 // components
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
-import { LoginForm } from '../components/authentication/login';
+import UpdatePasswordForm from '../components/authentication/UpdatePasswordForm';
 
 // ----------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function UpdatePassword() {
   return (
-    <RootStyle title="Login | ATEMA">
+    <RootStyle title="Atualizar Senha | ATEMA">
       <MHidden width="mdDown">
         <SectionStyle>
           <img
@@ -52,14 +52,14 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Entrar no sistema
+              Atualizar Senha
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              Entre com suas credenciais aqui.
+              Insira sua nova senha e o código recebido por e-mail para atualizar sua senha.
             </Typography>
           </Stack>
 
-          <LoginForm />
+          <UpdatePasswordForm />
         </ContentStyle>
       </Container>
     </RootStyle>

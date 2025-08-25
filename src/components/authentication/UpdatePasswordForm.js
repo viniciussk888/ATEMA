@@ -1,54 +1,51 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 // material
-import { Link, Stack, TextField, IconButton, InputAdornment } from '@material-ui/core';
+import { Stack, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { useDispatch } from 'react-redux';
 //API
-import apiAtema from '../../../services/apiAtema';
+import apiAtema from '../../services/apiAtema';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function UpdatePasswordForm() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Informe um email válido').required('O Email é requerido'),
-    password: Yup.string().required('A Senha é requerida')
+    password: Yup.string().required('A Senha é requerida'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'As senhas devem ser iguais')
+      .required('Confirmação de senha é requerida'),
+    hash: Yup.string().required('O código é requerido')
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
+      hash: '',
       password: '',
-      remember: true
+      confirmPassword: ''
     },
     validationSchema: LoginSchema,
     onSubmit: async (values) => {
       try {
-        const response = await apiAtema.post('session', {
+        await apiAtema.post('/auth/update-password', {
           email: values.email,
-          password: values.password
+          newPassword: values.password,
+          hash: values.hash
         });
-        dispatch({ type: 'LOG_IN', usuarioEmail: values.email, token: response.data.accessToken });
-        sessionStorage.setItem('@atema#token', response.data.accessToken);
-        sessionStorage.setItem('@atema#username', response.data.user.username);
-        sessionStorage.setItem('@atema#email', values.email);
-        sessionStorage.setItem('@atema#admin', response.data.user.admin);
-        sessionStorage.setItem('@atema#insert', response.data.user.insert);
-        sessionStorage.setItem('@atema#update', response.data.user.update);
-        sessionStorage.setItem('@atema#delete', response.data.user.delete);
-        sessionStorage.setItem('@atema#blog', response.data.user.blog);
-        navigate('/dashboard', { replace: true });
+        toast.success('Senha atualizada com sucesso! Faça login para continuar.');
+        navigate('/login', { replace: true });
       } catch (err) {
-        alert('Falha no login, tente novamente. ', err);
+        toast.error('Erro ao atualizar senha, tente novamente. ');
       }
     }
   });
@@ -75,6 +72,15 @@ export default function LoginForm() {
 
           <TextField
             fullWidth
+            type="text"
+            label="Código recebido por email"
+            {...getFieldProps('hash')}
+            error={Boolean(touched.hash && errors.hash)}
+            helperText={touched.hash && errors.hash}
+          />
+
+          <TextField
+            fullWidth
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Senha"
@@ -91,12 +97,25 @@ export default function LoginForm() {
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
-        </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <Link component={RouterLink} variant="subtitle2" to="/recover-password" underline="hover">
-            Esqueceu sua senha?
-          </Link>
+          <TextField
+            fullWidth
+            autoComplete="current-password"
+            type={showPassword ? 'text' : 'password'}
+            label="Confirmar senha"
+            {...getFieldProps('confirmPassword')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleShowPassword} edge="end">
+                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+            helperText={touched.confirmPassword && errors.confirmPassword}
+          />
         </Stack>
 
         <LoadingButton
@@ -105,8 +124,9 @@ export default function LoginForm() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          style={{ marginTop: 32 }}
         >
-          ENTRAR
+          ATUALIZAR SENHA
         </LoadingButton>
       </Form>
     </FormikProvider>

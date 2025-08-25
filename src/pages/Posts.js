@@ -85,7 +85,7 @@ export default function Posts() {
   return (
     <Page title="Posts | ATEMA">
       <Container>
-        <Typography variant="h5">Novo post</Typography>
+        <Typography variant="h5">Criar nova postagem no portal</Typography>
         <br />
         <form enctype="multipart/form-data" noValidate>
           <Card style={{ padding: 24 }}>
