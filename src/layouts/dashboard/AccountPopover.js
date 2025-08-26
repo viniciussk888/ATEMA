@@ -53,7 +53,7 @@ export default function AccountPopover() {
     try {
       dispatch({ type: 'LOG_OUT' });
       sessionStorage.clear();
-      navigate('/blog', { replace: true });
+      navigate('/', { replace: true });
     } catch (error) {
       alert(error);
     }

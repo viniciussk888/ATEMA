@@ -39,13 +39,12 @@ export default function Router() {
       path: '/',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'blog', element: <Blog /> },
+        { path: '/', element: <Blog /> },
         { path: 'login', element: <Login /> },
         { path: 'recover-password', element: <RecoverPassword /> },
         { path: 'update-password', element: <UpdatePassword /> },
         { path: 'post/:id', element: <Post /> },
         { path: '404', element: <NotFound /> },
-        { path: '/', element: <Navigate to="/dashboard" /> },
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },

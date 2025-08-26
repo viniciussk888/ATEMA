@@ -21,6 +21,7 @@ import Editor from 'react-simple-wysiwyg';
 
 import apiAtema from '../services/apiAtema';
 import { toast } from 'react-toastify';
+import { fDateTimeSuffix } from '../utils/formatTime';
 
 export default function Posts() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function Posts() {
   const [post, setPost] = useState([]);
   const [content, setContent] = useState('');
   const [aux, setAux] = useState(0);
+  const [sending, setSending] = useState(false);
 
   function onChangeContent(e) {
     setContent(e.target.value);
@@ -42,22 +44,30 @@ export default function Posts() {
     if (!title || !content || !file) {
       return toast.error('Preencha todos os campos!');
     }
-    const formData = new FormData();
-    formData.append('image', file);
-    const response = await apiAtema.post('posts/file', formData);
-    const imageUrl = response.data.image;
+    if (sending) return;
+    setSending(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const response = await apiAtema.post('posts/file', formData);
+      const imageUrl = response.data.image;
 
-    await apiAtema.post('posts', {
-      title,
-      content,
-      image: imageUrl,
-      author: sessionStorage.getItem('@atema#username')
-    });
-    toast.success('Postagem realizada com sucesso!');
-    setTitle('');
-    setContent('');
-    setFile('');
-    setAux(Math.random);
+      await apiAtema.post('posts', {
+        title,
+        content,
+        image: imageUrl,
+        author: sessionStorage.getItem('@atema#username')
+      });
+      toast.success('Postagem realizada com sucesso!');
+      setTitle('');
+      setContent('');
+      setFile('');
+      setAux(Math.random);
+    } catch (error) {
+      toast.error('Erro ao realizar a postagem, tente novamente!');
+    } finally {
+      setSending(false);
+    }
   }
   async function deletePost(id) {
     const r = window.confirm(`Confirma a EXCLUSÃO?`);
@@ -66,7 +76,7 @@ export default function Posts() {
         await apiAtema.delete(`posts/${id}`);
         setAux(Math.random);
       } catch (error) {
-        alert('Erro ao deletar!! tente novamente...');
+        toast.error('Erro ao deletar, tente novamente!');
       }
     } else {
       return;
@@ -135,8 +145,14 @@ export default function Posts() {
               </Grid>
 
               <Grid item xs={12} sm={12}>
-                <Button onClick={handlePost} variant="contained" color="primary">
-                  ADICIONAR
+                <Button
+                  onClick={handlePost}
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  loading={sending}
+                >
+                  {sending ? 'CARREGANDO...' : 'CRIAR POSTAGEM'}
                 </Button>
               </Grid>
             </Grid>
@@ -148,13 +164,18 @@ export default function Posts() {
         <Grid item xs={12}>
           <Paper>
             <Typography variant="h6" gutterBottom>
-              Posts
+              Posts criados no portal
             </Typography>
 
             <Grid container spacing={3}>
               {post.map((item) => (
                 <Grid item xs={12} sm={4}>
-                  <CardActionArea component="a" href="#">
+                  <CardActionArea
+                    component="a"
+                    href={`/post/${item.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <Card>
                       <div>
                         <CardContent>
@@ -162,7 +183,7 @@ export default function Posts() {
                             {item.title}
                           </Typography>
                           <Typography variant="subtitle1" color="textSecondary">
-                            {item.created_at}
+                            {fDateTimeSuffix(item.createdAt)}
                           </Typography>
                           <Typography variant="subtitle1" paragraph>
                             Autor: {item.author}

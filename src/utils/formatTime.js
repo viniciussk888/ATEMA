@@ -11,7 +11,8 @@ export function fDateTime(date) {
 }
 
 export function fDateTimeSuffix(date) {
-  return format(new Date(date), 'dd/MM/yyyy hh:mm p');
+  if (!date) return '';
+  return format(new Date(date), 'dd/MM/yyyy hh:mm');
 }
 
 export function fToNow(date) {

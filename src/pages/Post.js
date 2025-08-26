@@ -1,29 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Hidden from '@material-ui/core/Hidden';
+import { Container, Typography, Box, Avatar, Divider, Button } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
-import apiAtema from 'src/services/apiAtema';
+import apiAtema from '../services/apiAtema';
+import { fDateTimeSuffix } from '../utils/formatTime';
 
-const useStyles = makeStyles({
-  card: {
-    display: 'flex',
-    margin: 10,
-    overflow: 'auto'
-  },
-  cardDetails: {
-    flex: 1
-  },
-  cardMedia: {
-    width: 400
-  }
-});
-
-export default function Post() {
-  const classes = useStyles();
+export default function PostPage() {
   const [post, setPost] = useState({});
   const params = useParams();
 
@@ -40,27 +21,56 @@ export default function Post() {
     getPost();
   }, [params.id]);
 
+  if (!post) return <Typography>Carregando...</Typography>;
+
   return (
-    <Card className={classes.card}>
-      <div className={classes.cardDetails}>
-        <CardContent>
-          <Typography component="h2" variant="h5">
-            {post.title}
+    <Container maxWidth="md" sx={{ mt: 5, pb: 20 }}>
+      {/* Botao voltar */}
+      <Button variant="outlined" onClick={() => window.history.back()} sx={{ mb: 3 }}>
+        Voltar
+      </Button>
+
+      {/* Título */}
+      <Typography variant="h3" component="h1" gutterBottom>
+        {post.title}
+      </Typography>
+
+      {/* Autor e data */}
+      <Box display="flex" alignItems="center" mb={2}>
+        <Avatar sx={{ mr: 2 }}>{post?.author?.charAt(0)}</Avatar>
+        <Box>
+          <Typography variant="subtitle1">{post.author}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            {fDateTimeSuffix(post.createdAt)}
           </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {post.created_at}
-          </Typography>
-          <Typography variant="subtitle1" paragraph>
-            {post.content}
-          </Typography>
-          <Typography variant="subtitle1" color="primary">
-            Autor: {post.author}
-          </Typography>
-        </CardContent>
-      </div>
-      <Hidden xsDown>
-        <CardMedia className={classes.cardMedia} image={post.image} title={post.title} />
-      </Hidden>
-    </Card>
+        </Box>
+      </Box>
+
+      <Divider sx={{ mb: 3 }} />
+
+      {/* Imagem destaque */}
+      <Box
+        component="img"
+        src={post.image}
+        alt={post.title}
+        sx={{
+          width: '100%',
+          height: 'auto',
+          borderRadius: 2,
+          mb: 3
+        }}
+      />
+
+      {/* Conteúdo vindo em HTML */}
+      <Box
+        sx={{
+          typography: 'body1',
+          lineHeight: 1.8,
+          '& h2': { fontSize: '1.5rem', marginTop: 3 },
+          '& p': { marginBottom: 2 }
+        }}
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+    </Container>
   );
 }
