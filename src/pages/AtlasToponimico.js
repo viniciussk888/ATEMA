@@ -157,7 +157,7 @@ export default function AtlasToponimico() {
 
                       return (
                         <TableRow hover key={id} tabIndex={-1} role="checkbox">
-                          <TableCell padding="checkbox"></TableCell>
+                          <TableCell align="left">{id}</TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <Typography variant="subtitle2" noWrap>
@@ -165,6 +165,7 @@ export default function AtlasToponimico() {
                               </Typography>
                             </Stack>
                           </TableCell>
+
                           <TableCell align="left">{toponimo}</TableCell>
                           <TableCell align="left">{elementogeografico}</TableCell>
                           <TableCell align="left">{area}</TableCell>

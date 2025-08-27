@@ -10,7 +10,8 @@ import {
   InputLabel,
   Button,
   Card,
-  Container
+  Container,
+  Skeleton
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import Clear from '@material-ui/icons/Clear';
@@ -25,6 +26,7 @@ import { toast } from 'react-toastify';
 export default function EditaAtlasToponimico() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [loadingDados, setLoadingDados] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [microrregioes, setMicrorregioes] = useState([]);
@@ -222,6 +224,8 @@ export default function EditaAtlasToponimico() {
         }));
       } catch (e) {
         toast.error('Erro ao carregar os dados para edição');
+      } finally {
+        setLoadingDados(false);
       }
     })();
   }, [id]);
@@ -270,286 +274,298 @@ export default function EditaAtlasToponimico() {
           {id ? 'Editar dados toponímicos' : 'Novo Atlas Toponímico'}
         </Typography>
         <Card style={{ marginBottom: 16, marginTop: 24 }}>
-          <div style={{ padding: 24 }}>
-            <Grid container spacing={3}>
-              {/* Mesorregião */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Mesorregião</InputLabel>
-                  <Select native value={formData.codMeso} onChange={handleChange('codMeso')}>
-                    <option disabled value=""></option>
-                    {mesorregioes.map((item) => (
-                      <option key={item.codigo} value={`${item.codigo}-${item.nome}`}>
-                        {item.nome}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+          {loadingDados ? (
+            <Skeleton variant="rectangular" height={600} style={{ margin: 24 }} />
+          ) : (
+            <div style={{ padding: 24 }}>
+              <Grid container spacing={3}>
+                {/* Mesorregião */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Mesorregião</InputLabel>
+                    <Select native value={formData.codMeso} onChange={handleChange('codMeso')}>
+                      <option disabled value=""></option>
+                      {mesorregioes.map((item) => (
+                        <option key={item.codigo} value={`${item.codigo}-${item.nome}`}>
+                          {item.nome}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              {/* Microrregião */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Microrregião</InputLabel>
-                  <Select
-                    native
-                    value={formData.microrregiao}
-                    onChange={handleChange('microrregiao')}
+                {/* Microrregião */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Microrregião</InputLabel>
+                    <Select
+                      native
+                      value={formData.microrregiao}
+                      onChange={handleChange('microrregiao')}
+                    >
+                      <option disabled value=""></option>
+                      {microrregioes.map((item) => (
+                        <option key={item.id} value={`${item.id}-${item.nome}`}>
+                          {item.nome}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Município */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Município</InputLabel>
+                    <Select native value={formData.municipio} onChange={handleChange('municipio')}>
+                      <option disabled value=""></option>
+                      {municipios.map((item) => (
+                        <option key={item.nome} value={item.nome}>
+                          {item.nome}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Elemento Geográfico */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Elemento Geográfico</InputLabel>
+                    <Select
+                      native
+                      value={formData.elementogeografico}
+                      onChange={handleChange('elementogeografico')}
+                    >
+                      <option disabled value=""></option>
+                      {options.elementos.map((item) => (
+                        <option key={item.name} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Topônimo */}
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Topônimo"
+                    variant="outlined"
+                    value={formData.toponimo}
+                    onChange={handleChange('toponimo')}
+                  />
+                </Grid>
+
+                {/* Variante */}
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Variante"
+                    variant="outlined"
+                    value={formData.variante}
+                    onChange={handleChange('variante')}
+                  />
+                </Grid>
+
+                {/* Tipo */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Tipo</InputLabel>
+                    <Select native value={formData.tipo} onChange={handleChange('tipo')}>
+                      <option value="Humano">Humano</option>
+                      <option value="Físico">Físico</option>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Área */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Área</InputLabel>
+                    <Select native value={formData.area} onChange={handleChange('area')}>
+                      <option value="Urbana">Urbana</option>
+                      <option value="Rural">Rural</option>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Língua de Origem */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Língua de Origem</InputLabel>
+                    <Select
+                      native
+                      value={formData.linguaOrigem}
+                      onChange={handleChange('linguaOrigem')}
+                    >
+                      <option disabled value=""></option>
+                      {options.linguas.map((item) => (
+                        <option key={item.name} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Taxonomia */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Taxonomia</InputLabel>
+                    <Select
+                      native
+                      value={formData.taxionomia}
+                      onChange={handleChange('taxionomia')}
+                    >
+                      <option disabled value=""></option>
+                      {options.taxonomias.map((item) => (
+                        <option key={item.name} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Estrutura Morfológica */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Estrutura Morfológica</InputLabel>
+                    <Select
+                      native
+                      value={formData.estruturaMorfologica}
+                      onChange={handleChange('estruturaMorfologica')}
+                    >
+                      <option disabled value=""></option>
+                      <option value="Simples">Simples</option>
+                      <option value="Composto">Composto</option>
+                      <option value="Simples híbrido">Simples híbrido</option>
+                      <option value="Composto híbrido">Composto híbrido</option>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Etimologia */}
+                <Grid item xs={12} sm={4}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel>Etimologia</InputLabel>
+                    <Select
+                      native
+                      value={formData.etimologia}
+                      onChange={handleChange('etimologia')}
+                    >
+                      <option disabled value=""></option>
+                      {options.etimologias.map((item) => (
+                        <option key={item.name} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Campos de texto adicionais */}
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Etimologia detalhada"
+                    variant="outlined"
+                    value={formData.etimologiaEsc}
+                    onChange={handleChange('etimologiaEsc')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Referências"
+                    variant="outlined"
+                    value={formData.referencias}
+                    onChange={handleChange('referencias')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Fonte (dados do mapa)"
+                    variant="outlined"
+                    value={formData.fonte}
+                    onChange={handleChange('fonte')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    type="date"
+                    label="Data da coleta"
+                    variant="outlined"
+                    InputLabelProps={{ shrink: true }}
+                    value={normalizaDataParaInput(formData.dataColeta)}
+                    onChange={(e) =>
+                      setFormData((p) => ({
+                        ...p,
+                        dataColeta: e.target.value || 'Não Informado'
+                      }))
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Responsável pela coleta"
+                    variant="outlined"
+                    value={formData.responsavel}
+                    onChange={handleChange('responsavel')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    label="Revisor"
+                    variant="outlined"
+                    value={formData.revisor}
+                    onChange={handleChange('revisor')}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Observações"
+                    variant="outlined"
+                    value={formData.observacoes}
+                    onChange={handleChange('observacoes')}
+                  />
+                </Grid>
+
+                {/* Botões */}
+                <Grid item xs={12} sm={6}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    startIcon={<Clear />}
+                    onClick={resetForm}
                   >
-                    <option disabled value=""></option>
-                    {microrregioes.map((item) => (
-                      <option key={item.id} value={`${item.id}-${item.nome}`}>
-                        {item.nome}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Município */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Município</InputLabel>
-                  <Select native value={formData.municipio} onChange={handleChange('municipio')}>
-                    <option disabled value=""></option>
-                    {municipios.map((item) => (
-                      <option key={item.nome} value={item.nome}>
-                        {item.nome}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Elemento Geográfico */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Elemento Geográfico</InputLabel>
-                  <Select
-                    native
-                    value={formData.elementogeografico}
-                    onChange={handleChange('elementogeografico')}
+                    LIMPAR
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <LoadingButton
+                    fullWidth
+                    variant="contained"
+                    size="large"
+                    loading={loading}
+                    onClick={submitData}
                   >
-                    <option disabled value=""></option>
-                    {options.elementos.map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
+                    GRAVAR
+                  </LoadingButton>
+                </Grid>
               </Grid>
-
-              {/* Topônimo */}
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  required
-                  label="Topônimo"
-                  variant="outlined"
-                  value={formData.toponimo}
-                  onChange={handleChange('toponimo')}
-                />
-              </Grid>
-
-              {/* Variante */}
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Variante"
-                  variant="outlined"
-                  value={formData.variante}
-                  onChange={handleChange('variante')}
-                />
-              </Grid>
-
-              {/* Tipo */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Tipo</InputLabel>
-                  <Select native value={formData.tipo} onChange={handleChange('tipo')}>
-                    <option value="Humano">Humano</option>
-                    <option value="Físico">Físico</option>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Área */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Área</InputLabel>
-                  <Select native value={formData.area} onChange={handleChange('area')}>
-                    <option value="Urbana">Urbana</option>
-                    <option value="Rural">Rural</option>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Língua de Origem */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Língua de Origem</InputLabel>
-                  <Select
-                    native
-                    value={formData.linguaOrigem}
-                    onChange={handleChange('linguaOrigem')}
-                  >
-                    <option disabled value=""></option>
-                    {options.linguas.map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Taxonomia */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Taxonomia</InputLabel>
-                  <Select native value={formData.taxionomia} onChange={handleChange('taxionomia')}>
-                    <option disabled value=""></option>
-                    {options.taxonomias.map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Estrutura Morfológica */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Estrutura Morfológica</InputLabel>
-                  <Select
-                    native
-                    value={formData.estruturaMorfologica}
-                    onChange={handleChange('estruturaMorfologica')}
-                  >
-                    <option disabled value=""></option>
-                    <option value="Simples">Simples</option>
-                    <option value="Composto">Composto</option>
-                    <option value="Simples híbrido">Simples híbrido</option>
-                    <option value="Composto híbrido">Composto híbrido</option>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Etimologia */}
-              <Grid item xs={12} sm={4}>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel>Etimologia</InputLabel>
-                  <Select native value={formData.etimologia} onChange={handleChange('etimologia')}>
-                    <option disabled value=""></option>
-                    {options.etimologias.map((item) => (
-                      <option key={item.name} value={item.name}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* Campos de texto adicionais */}
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Etimologia detalhada"
-                  variant="outlined"
-                  value={formData.etimologiaEsc}
-                  onChange={handleChange('etimologiaEsc')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Referências"
-                  variant="outlined"
-                  value={formData.referencias}
-                  onChange={handleChange('referencias')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Fonte (dados do mapa)"
-                  variant="outlined"
-                  value={formData.fonte}
-                  onChange={handleChange('fonte')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  type="date"
-                  label="Data da coleta"
-                  variant="outlined"
-                  InputLabelProps={{ shrink: true }}
-                  value={normalizaDataParaInput(formData.dataColeta)}
-                  onChange={(e) =>
-                    setFormData((p) => ({
-                      ...p,
-                      dataColeta: e.target.value || 'Não Informado'
-                    }))
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Responsável pela coleta"
-                  variant="outlined"
-                  value={formData.responsavel}
-                  onChange={handleChange('responsavel')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  fullWidth
-                  label="Revisor"
-                  variant="outlined"
-                  value={formData.revisor}
-                  onChange={handleChange('revisor')}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Observações"
-                  variant="outlined"
-                  value={formData.observacoes}
-                  onChange={handleChange('observacoes')}
-                />
-              </Grid>
-
-              {/* Botões */}
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="secondary"
-                  size="large"
-                  startIcon={<Clear />}
-                  onClick={resetForm}
-                >
-                  LIMPAR
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <LoadingButton
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  loading={loading}
-                  onClick={submitData}
-                >
-                  GRAVAR
-                </LoadingButton>
-              </Grid>
-            </Grid>
-          </div>
+            </div>
+          )}
         </Card>
       </Container>
     </Page>
