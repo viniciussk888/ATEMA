@@ -40,7 +40,7 @@ export default function AtemaLandingPage() {
     },
     {
       id: 3,
-      title: 'CRUD de Informações',
+      title: 'Gerencia de Informações',
       description: 'Gerencie informações toponímicas coletadas durante as pesquisas.'
     },
     {
@@ -198,17 +198,18 @@ export default function AtemaLandingPage() {
             Entre em Contato
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Tem dúvidas, sugestões ou deseja colaborar com o ATEMA? Envie sua mensagem.
+            Tem dúvidas, sugestões ou deseja colaborar com o ATEMA? Envie um e-mail para:
           </Typography>
           <Stack spacing={2}>
-            <TextField label="Nome" variant="outlined" fullWidth value="Celia Leite Castro" />
-            <TextField
-              label="E-mail"
-              type="email"
-              variant="outlined"
-              fullWidth
-              value="celialeitecastro@hotmail.com	"
-            />
+            <Typography variant="h6" gutterBottom textAlign="left">
+              Nome: Celia Leite Castro
+            </Typography>
+            <Typography variant="h6" gutterBottom textAlign="left">
+              Instituição: Universidade Estadual do Maranhão - UEMA
+            </Typography>
+            <Typography variant="h6" gutterBottom textAlign="left">
+              E-mail: <a href="mailto:celialeitecastro@hotmail.com">celialeitecastro@hotmail.com</a>
+            </Typography>
           </Stack>
         </Container>
       </Box>

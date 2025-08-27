@@ -225,8 +225,26 @@ export default function NovoAtlasToponimico() {
                 </FormControl>
               </Grid>
 
+              <Grid item xs={12} sm={4}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel>Elemento Geográfico</InputLabel>
+                  <Select
+                    native
+                    value={formData.elementogeografico}
+                    onChange={handleChange('elementogeografico')}
+                  >
+                    <option disabled value=""></option>
+                    {options.elementos.map((item) => (
+                      <option key={item.name} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
               {/* Topônimo */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   required
@@ -238,7 +256,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Variante */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   fullWidth
                   label="Variante"
@@ -249,7 +267,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Tipo */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Tipo</InputLabel>
                   <Select native value={formData.tipo} onChange={handleChange('tipo')}>
@@ -260,7 +278,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Área */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Área</InputLabel>
                   <Select native value={formData.area} onChange={handleChange('area')}>
@@ -271,7 +289,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Língua de Origem */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Língua de Origem</InputLabel>
                   <Select
@@ -290,7 +308,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Taxonomia */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Taxonomia</InputLabel>
                   <Select native value={formData.taxionomia} onChange={handleChange('taxionomia')}>
@@ -305,7 +323,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Estrutura Morfológica */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Estrutura Morfológica</InputLabel>
                   <Select
@@ -323,7 +341,7 @@ export default function NovoAtlasToponimico() {
               </Grid>
 
               {/* Etimologia */}
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Etimologia</InputLabel>
                   <Select native value={formData.etimologia} onChange={handleChange('etimologia')}>
