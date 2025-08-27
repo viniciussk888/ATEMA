@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   Grid,
@@ -22,8 +22,9 @@ import mesorregioes from '../utils/mesorregioes.json';
 import Page from '../components/Page';
 import { toast } from 'react-toastify';
 
-export default function NovoAtlasToponimico() {
+export default function EditaAtlasToponimico() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [loading, setLoading] = useState(false);
   const [microrregioes, setMicrorregioes] = useState([]);
@@ -61,12 +62,24 @@ export default function NovoAtlasToponimico() {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const inverterData = (str) => {
-    if (str && str !== 'Não Informado') {
-      const [y, m, d] = str.split('-');
-      return `${d}/${m}/${y}`;
+  // Normaliza para valor aceitável pelo <input type="date">
+  const normalizaDataParaInput = (valor) => {
+    if (!valor || valor === 'Não Informado') return '';
+    // aceita "YYYY-MM-DD", "YYYY-MM-DDTHH:mm", "YYYY-MM-DD HH:mm", "DD/MM/YYYY"
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(valor)) {
+      const [d, m, y] = valor.split('/');
+      return `${y}-${m}-${d}`;
     }
-    return str;
+    const apenasData = valor.split('T')[0].split(' ')[0];
+    return apenasData;
+  };
+
+  // Converte para dd/mm/yyyy antes de enviar (mantém seu comportamento anterior)
+  const inverterData = (str) => {
+    if (!str || str === 'Não Informado') return str;
+    // aqui chega "YYYY-MM-DD"
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
   };
 
   const resetForm = () =>
@@ -92,7 +105,24 @@ export default function NovoAtlasToponimico() {
       observacoes: ''
     });
 
-  // 🔹 Busca selects iniciais
+  // Helpers para achar o value correto dos selects
+  const montarValorMeso = (mesoDoRegistro) => {
+    if (!mesoDoRegistro) return '';
+    const m = mesorregioes.find(
+      (x) => x.nome === mesoDoRegistro || String(x.codigo) === String(mesoDoRegistro)
+    );
+    return m ? `${m.codigo}-${m.nome}` : '';
+  };
+
+  const montarValorMicro = (lista, microDoRegistro) => {
+    if (!microDoRegistro) return '';
+    const mi = lista.find(
+      (x) => x.nome === microDoRegistro || String(x.id) === String(microDoRegistro)
+    );
+    return mi ? `${mi.id}-${mi.nome}` : '';
+  };
+
+  // 🔹 Busca selects iniciais estáticos
   useEffect(() => {
     (async () => {
       try {
@@ -108,7 +138,7 @@ export default function NovoAtlasToponimico() {
           etimologias: eti.data,
           taxonomias: tax.data
         });
-      } catch (e) {
+      } catch {
         toast.error('Erro ao carregar selects');
       }
     })();
@@ -124,19 +154,77 @@ export default function NovoAtlasToponimico() {
     }
   }, [navigate]);
 
-  // 🔹 Busca microrregiões
+  // 🔹 Busca microrregiões quando escolhe meso (uso manual)
   useEffect(() => {
     if (!formData.codMeso) return;
-    const [id] = formData.codMeso.split('-');
-    apiMeso.get(`${id}/microrregioes`).then((res) => setMicrorregioes(res.data));
+    const [idMeso] = formData.codMeso.split('-');
+    apiMeso.get(`${idMeso}/microrregioes`).then((res) => setMicrorregioes(res.data));
   }, [formData.codMeso]);
 
-  // 🔹 Busca municípios
+  // 🔹 Busca municípios quando escolhe micro (uso manual)
   useEffect(() => {
     if (!formData.microrregiao) return;
-    const [id] = formData.microrregiao.split('-');
-    apiMun.get(`${id}/municipios`).then((res) => setMunicipios(res.data));
+    const [idMicro] = formData.microrregiao.split('-');
+    apiMun.get(`${idMicro}/municipios`).then((res) => setMunicipios(res.data));
   }, [formData.microrregiao]);
+
+  // 🔹 Pré-preenchimento encadeado para edição
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      try {
+        const { data: registro } = await apiAtema.get(`atema/${id}`);
+
+        // 1) Mesorregião: descobre o value "codigo-nome"
+        const valorMeso = montarValorMeso(registro.mesorregiao ?? registro.codMeso);
+        let novasMicros = [];
+        let valorMicro = '';
+
+        if (valorMeso) {
+          const [codigoMeso] = valorMeso.split('-');
+          const resMicros = await apiMeso.get(`${codigoMeso}/microrregioes`);
+          novasMicros = resMicros.data || [];
+          setMicrorregioes(novasMicros);
+
+          // 2) Microrregião: descobre o value "id-nome"
+          valorMicro = montarValorMicro(novasMicros, registro.microrregiao);
+          if (valorMicro) {
+            const [idMicro] = valorMicro.split('-');
+            const resMuns = await apiMun.get(`${idMicro}/municipios`);
+            setMunicipios(resMuns.data || []);
+          }
+        }
+
+        setFormData((prev) => ({
+          ...prev,
+          codMeso: valorMeso, // "codigo-nome"
+          microrregiao: valorMicro, // "id-nome"
+          municipio: registro.municipio || '',
+          elementogeografico: registro.elementogeografico || '',
+          toponimo: registro.toponimo || '',
+          variante: registro.variante || '',
+          tipo: registro.tipo || 'Humano',
+          area: registro.area || 'Urbana',
+          linguaOrigem: registro.linguaOrigem || '',
+          etimologia: registro.etimologia || '',
+          etimologiaEsc: registro.etimologiaEsc || '',
+          taxionomia: registro.taxionomia || '',
+          estruturaMorfologica: registro.estruturaMorfologica || '',
+          referencias: registro.referencias || '',
+          fonte: registro.fonte || '',
+          dataColeta: (() => {
+            const v = normalizaDataParaInput(registro.dataColeta);
+            return v || 'Não Informado';
+          })(),
+          responsavel: registro.responsavel || '',
+          revisor: registro.revisor || '',
+          observacoes: registro.observacoes || ''
+        }));
+      } catch (e) {
+        toast.error('Erro ao carregar os dados para edição');
+      }
+    })();
+  }, [id]);
 
   const submitData = async () => {
     const { codMeso, microrregiao, municipio, toponimo } = formData;
@@ -146,30 +234,40 @@ export default function NovoAtlasToponimico() {
     }
     setLoading(true);
 
-    const meso = codMeso.split('-')[1];
+    const meso = codMeso.split('-')[1]; // envia NOME da meso (mantive seu padrão)
     const micro = microrregiao.split('-')[1];
 
     try {
-      await apiAtema.post('atema', {
+      const payload = {
         ...formData,
         mesorregiao: meso,
         microrregiao: micro,
-        dataColeta: inverterData(formData.dataColeta)
-      });
-      toast.success('Dados enviados com sucesso!');
-      resetForm();
+        dataColeta:
+          formData.dataColeta === 'Não Informado' || formData.dataColeta === ''
+            ? 'Não Informado'
+            : inverterData(formData.dataColeta) // dd/mm/yyyy
+      };
+
+      if (id) {
+        await apiAtema.put(`atema/${id}`, payload);
+        toast.success('Dados atualizados com sucesso!');
+      } else {
+        await apiAtema.post('atema', payload);
+        toast.success('Dados enviados com sucesso!');
+        resetForm();
+      }
     } catch (err) {
-      toast.error('Erro ao enviar dados');
+      toast.error('Erro ao salvar dados');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Page title="Novo Atlas Toponímico | ATEMA">
+    <Page title="Editar Atlas Toponímico | ATEMA">
       <Container>
         <Typography variant="h4" gutterBottom>
-          Informe os dados toponímicos
+          {id ? 'Editar dados toponímicos' : 'Novo Atlas Toponímico'}
         </Typography>
         <Card style={{ marginBottom: 16, marginTop: 24 }}>
           <div style={{ padding: 24 }}>
@@ -223,6 +321,7 @@ export default function NovoAtlasToponimico() {
                 </FormControl>
               </Grid>
 
+              {/* Elemento Geográfico */}
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel>Elemento Geográfico</InputLabel>
@@ -388,8 +487,13 @@ export default function NovoAtlasToponimico() {
                   label="Data da coleta"
                   variant="outlined"
                   InputLabelProps={{ shrink: true }}
-                  value={formData.dataColeta}
-                  onChange={handleChange('dataColeta')}
+                  value={normalizaDataParaInput(formData.dataColeta)}
+                  onChange={(e) =>
+                    setFormData((p) => ({
+                      ...p,
+                      dataColeta: e.target.value || 'Não Informado'
+                    }))
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={4}>

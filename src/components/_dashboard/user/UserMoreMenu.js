@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
+import pinFill from '@iconify/icons-eva/edit-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import Modal from '@material-ui/core/Modal';
@@ -18,6 +19,7 @@ import {
 } from '@material-ui/core';
 import apiAtema from '../../../services/apiAtema';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -84,6 +86,18 @@ export default function UserMoreMenu({ atemaId, setAtemas }) {
       return;
     }
   }
+
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    const update = sessionStorage.getItem('@atema#update');
+    const admin = sessionStorage.getItem('@atema#admin');
+    if (admin === 0 && update === 0) {
+      toast.error('Você não tem permissão para a operação!');
+      return;
+    }
+    navigate(`/dashboard/atlas/edita/${atemaId}`);
+  };
 
   return (
     <>
@@ -205,11 +219,21 @@ export default function UserMoreMenu({ atemaId, setAtemas }) {
           <ListItemText primary="Ver informações" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
+        <MenuItem onClick={handleEdit} sx={{ color: 'text.secondary' }}>
+          <ListItemIcon>
+            <Icon icon={pinFill} width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Editar" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+
         <MenuItem onClick={deleteData} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
-            <Icon icon={trash2Outline} width={24} height={24} />
+            <Icon icon={trash2Outline} width={24} height={24} color="#FF0000" />
           </ListItemIcon>
-          <ListItemText primary="Deletar" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText
+            primary="Deletar"
+            primaryTypographyProps={{ variant: 'body2', color: '#FF0000' }}
+          />
         </MenuItem>
       </Menu>
     </>

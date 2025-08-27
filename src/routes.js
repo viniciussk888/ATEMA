@@ -16,6 +16,7 @@ import Posts from './pages/Posts';
 import Post from './pages/Post';
 import RecoverPassword from './pages/RecoverPassword';
 import UpdatePassword from './pages/UpdatePassword';
+import EditaAtlasToponimico from './pages/EditaAtlasToponimico';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'atlas', element: <AtlasToponimico /> },
         { path: 'atlas/novo', element: <NovoAtlasToponimico /> },
+        { path: 'atlas/edita/:id', element: <EditaAtlasToponimico /> },
         { path: 'relate', element: <Relate /> },
         { path: 'users', element: <Users /> },
         { path: 'dados', element: <Dados /> },
