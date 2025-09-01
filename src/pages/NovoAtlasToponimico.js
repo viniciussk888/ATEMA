@@ -10,7 +10,8 @@ import {
   InputLabel,
   Button,
   Card,
-  Container
+  Container,
+  Autocomplete
 } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 import Clear from '@material-ui/icons/Clear';
@@ -69,7 +70,7 @@ export default function NovoAtlasToponimico() {
     return str;
   };
 
-  const resetForm = () =>
+  const resetForm = () => {
     setFormData({
       codMeso: '',
       microrregiao: '',
@@ -91,6 +92,11 @@ export default function NovoAtlasToponimico() {
       revisor: '',
       observacoes: ''
     });
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  };
 
   // 🔹 Busca selects iniciais
   useEffect(() => {
@@ -140,6 +146,7 @@ export default function NovoAtlasToponimico() {
 
   const submitData = async () => {
     const { codMeso, microrregiao, municipio, toponimo } = formData;
+    console.log(formData);
     if (!codMeso || !microrregiao || !municipio || !toponimo) {
       toast.error('Dados de Região e Topônimo são necessários!');
       return;
@@ -211,7 +218,7 @@ export default function NovoAtlasToponimico() {
               {/* Município */}
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel>Município</InputLabel>
+                  {/* <InputLabel>Município</InputLabel>
                   <Select native value={formData.municipio} onChange={handleChange('municipio')}>
                     <option disabled value=""></option>
                     {municipios.map((item) => (
@@ -219,14 +226,31 @@ export default function NovoAtlasToponimico() {
                         {item.nome}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
+                  <Autocomplete
+                    id="Município"
+                    value={formData.municipio}
+                    onChange={(_event, value) => {
+                      setFormData((prev) => ({ ...prev, municipio: value }));
+                    }}
+                    options={municipios.map((item) => item.nome)}
+                    renderInput={(params) => <TextField {...params} label="Município" />}
+                  />
                 </FormControl>
               </Grid>
 
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel>Elemento Geográfico</InputLabel>
-                  <Select
+                  {/* {/* <InputLabel>Elemento Geográfico</InputLabel> */}
+                  <Autocomplete
+                    id="Elemento Geográfico"
+                    onChange={(_event, value) => {
+                      setFormData((prev) => ({ ...prev, elementogeografico: value }));
+                    }}
+                    options={options.elementos.map((item) => item.name)}
+                    renderInput={(params) => <TextField {...params} label="Elemento Geográfico" />}
+                  />
+                  {/* <Select
                     native
                     value={formData.elementogeografico}
                     onChange={handleChange('elementogeografico')}
@@ -237,7 +261,7 @@ export default function NovoAtlasToponimico() {
                         {item.name}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
                 </FormControl>
               </Grid>
 
@@ -289,7 +313,7 @@ export default function NovoAtlasToponimico() {
               {/* Língua de Origem */}
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel>Língua de Origem</InputLabel>
+                  {/* <InputLabel>Língua de Origem</InputLabel>
                   <Select
                     native
                     value={formData.linguaOrigem}
@@ -301,14 +325,23 @@ export default function NovoAtlasToponimico() {
                         {item.name}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
+                  <Autocomplete
+                    id="Língua de Origem"
+                    value={formData.linguaOrigem}
+                    onChange={(_event, value) => {
+                      setFormData((prev) => ({ ...prev, linguaOrigem: value }));
+                    }}
+                    options={options.linguas.map((item) => item.name)}
+                    renderInput={(params) => <TextField {...params} label="Língua de Origem" />}
+                  />
                 </FormControl>
               </Grid>
 
               {/* Taxonomia */}
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel>Taxonomia</InputLabel>
+                  {/* <InputLabel>Taxonomia</InputLabel>
                   <Select native value={formData.taxionomia} onChange={handleChange('taxionomia')}>
                     <option disabled value=""></option>
                     {options.taxonomias.map((item) => (
@@ -316,7 +349,15 @@ export default function NovoAtlasToponimico() {
                         {item.name}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
+                  <Autocomplete
+                    id="Taxonomia"
+                    onChange={(_event, value) => {
+                      setFormData((prev) => ({ ...prev, taxionomia: value }));
+                    }}
+                    options={options.taxonomias.map((item) => item.name)}
+                    renderInput={(params) => <TextField {...params} label="Taxonomia" />}
+                  />
                 </FormControl>
               </Grid>
 
@@ -341,7 +382,7 @@ export default function NovoAtlasToponimico() {
               {/* Etimologia */}
               <Grid item xs={12} sm={4}>
                 <FormControl variant="filled" fullWidth>
-                  <InputLabel>Etimologia</InputLabel>
+                  {/* <InputLabel>Etimologia</InputLabel>
                   <Select native value={formData.etimologia} onChange={handleChange('etimologia')}>
                     <option disabled value=""></option>
                     {options.etimologias.map((item) => (
@@ -349,7 +390,15 @@ export default function NovoAtlasToponimico() {
                         {item.name}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
+                  <Autocomplete
+                    id="Etimologia"
+                    onChange={(_event, value) => {
+                      setFormData((prev) => ({ ...prev, etimologia: value }));
+                    }}
+                    options={options.etimologias.map((item) => item.name)}
+                    renderInput={(params) => <TextField {...params} label="Etimologia" />}
+                  />
                 </FormControl>
               </Grid>
 
